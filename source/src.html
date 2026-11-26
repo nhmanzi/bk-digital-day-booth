@@ -1090,12 +1090,12 @@ function openFlow(i){
 function actionsFor(fin){
   const a=document.getElementById('fActions');
   a.innerHTML = fin
-   ? `<button class="btn primary" id="aHome">${gi('home','#fff')}Try another service</button><button class="btn" id="aReplay">↻ Replay</button>`
-   : `<button class="btn" id="aHome">Back home</button><button class="btn ${auto?'on':''}" id="aAuto">${auto?'Pause':'Show me'}</button>`;
+   ? `<button class="btn" id="aReplay">↻ Replay</button>`
+   : `<button class="btn" id="aHome">Back home</button>`;
   const q=id=>document.getElementById(id);
-  q('aHome').onclick=goHome;
+  if(q('aHome'))q('aHome').onclick=goHome;
   if(fin){q('aReplay').onclick=()=>{step=0;renderStep()};}
-  else{q('aAuto').onclick=()=>{auto=!auto;actionsFor(false);if(auto)scheduleAuto();else clearTimeout(autoTimer)};
+  else{
 }
 }
 function renderStep(first){
