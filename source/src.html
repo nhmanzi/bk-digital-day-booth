@@ -1065,7 +1065,7 @@ function celebrate(){
 function goHome(){
   document.body.classList.remove('inflow');
   clearTimeout(autoTimer); auto=false; flow.classList.remove('show'); tip.classList.remove('on'); line.classList.remove('on'); finger.classList.remove('on');
-  setTimeout(()=>{home.classList.remove('away');scene.classList.remove('dim');homeLive=true;},350);
+  setTimeout(()=>{home.classList.remove('away');scene.classList.remove('dim');homeLive=true;layoutDirty=true;layout();},350);
 }
 
 /* ═════════════ IDLE / ATTRACT MODE ═════════════ */
