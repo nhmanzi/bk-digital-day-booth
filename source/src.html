@@ -805,23 +805,30 @@ const SERVICES = [
   {img:'loan_6',h:1252,top:80,bot:110,t:'Request sent',tip:'Close the message',d:'Your BK Advance request is being processed.',hot:[323,38,36,36,18]},
   {img:'loan_7',h:1252,top:80,bot:110,t:'BK Advance active',fin:true}]},
  { key:'send', name:'BK Quick +', short:'Get an instant loan right in the BK app.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:"Get an instant loan right in the BK app, with offers from RWF 600,000 up to RWF 30 million.", steps:[
-  {img:'send_0',h:1219,top:0,bot:110,t:'Open Transfer',tip:'Tap Transfer',d:'Every way to move money starts here.',hot:[160,1136,68,52,12]},
-  {img:'send_1',h:961,top:90,bot:110,t:'Choose transfer type',tip:'Tap Local transfer',d:'Send to any bank account in Rwanda.',hot:[31,154,313,54,10]},
-  {img:'send_2',h:667,top:96,bot:80,t:'Add the recipient',tip:'Tap Account number',d:'Enter the account number and BK finds the holder name.',hot:[31,258,313,56,10]},
-  {img:'send_3',h:699,top:96,bot:80,t:'Recipient found',tip:'Tap Select amount',d:'The account holder name is verified automatically.',hot:[20,619,335,56,8]},
-  {img:'send_4',h:699,top:96,bot:80,t:'Enter the amount',tip:'Tap Make transfer',d:'Your daily limit and the fee are shown before you send.',hot:[20,619,335,56,8]},
-  {img:'send_5',h:667,top:96,bot:80,t:'Confirm details',tip:'Tap Confirm transfer',d:'Check everything one last time.',hot:[20,587,335,56,8]},
-  {img:'send_6n',h:667,top:0,bot:0,pin:'send_6p',t:'Enter passcode',tip:'Tap any 4 digits',d:'Your 4-digit passcode authorises every payment. Try any numbers.',hot:[124,140,128,24,12]},
-  {img:'send_5',h:667,top:96,bot:80,sheet:'send_7s',t:'Transfer initiated',fin:true}]},
- { key:'bill', name:'BK Pay', short:'Electricity, water, TV and more, paid in seconds.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Pay water, electricity, TV and more from the Pay tab, with the bill account checked before you pay.', steps:[
-  {img:'bill_0',h:1219,top:0,bot:110,t:'Open Pay',tip:'Tap Pay',d:'All your billers live in the Pay tab.',hot:[244,1136,53,52,12]},
-  {img:'bill_1',h:1330,top:90,bot:110,t:'Find your biller',tip:'Tap Utility',d:'Water, electricity and more, grouped by category.',hot:[15,492,345,66,12]},
-  {img:'bill_2',h:1555,top:90,bot:110,t:'Pick the biller',tip:'Tap WASAC',d:'Pay your water bill straight from your account.',hot:[31,552,313,64,14]},
-  {img:'bill_3',h:856,top:96,bot:80,t:'Enter bill number',tip:'Tap Bill number',d:'Type the customer number from your WASAC bill.',hot:[29,458,313,56,10]},
-  {img:'bill_4',h:863,top:96,bot:80,t:'Account verified',tip:'Tap Make payment',d:'BK checks the bill number and shows the account name.',hot:[20,783,335,56,8]},
-  {img:'bill_5',h:672,top:96,bot:80,t:'Confirm payment',tip:'Tap Confirm payment',d:'Review the amount, fee and biller.',hot:[20,592,335,56,8]},
-  {img:'bill_6n',h:672,top:0,bot:0,pin:'bill_6p',t:'Enter passcode',tip:'Tap any 4 digits',d:'Your 4-digit passcode authorises every payment. Try any numbers.',hot:[124,140,128,24,12]},
-  {img:'bill_5',h:672,top:96,bot:80,sheet:'bill_7s',t:'Payment initiated',fin:true}]}
+  {img:'send_0',h:1219,top:0,bot:110,t:'Open More',tip:'Tap More',d:'Loans live under More.',hot:[316,1136,41,52,12]},
+  {img:'send_1',h:682,top:0,bot:110,t:'Start a loan request',tip:'Tap Request a Loan',d:'Check your loan offers or start a new request.',hot:[15,499,345,56,8]},
+  {img:'send_2',h:667,top:96,bot:110,t:'Pick BK Quick +',tip:'Tap BK Quick +',d:'An unsecured personal loan, paid straight into your account.',hot:[24,322,330,64,12]},
+  {img:'send_3',h:781,top:96,bot:80,t:'See the offer',tip:'Tap Request loan',d:'Interest rate, fees and timing, shown upfront.',hot:[20,701,335,56,8]},
+  {img:'send_4',h:2372,top:96,bot:80,t:'Accept the terms',tip:'Tap I Agree',d:'Eligibility, repayment and fees, all in one place.',hot:[20,2292,335,56,8]},
+  {img:'send_4',h:2372,top:96,bot:80,sheet:'send_5s',t:'Share RSSB details',tip:'Tap Continue',d:'With your consent, BK checks your salary details through RSSB.',hot:[32,510,311,56,8]},
+  {img:'send_6',h:718,top:96,bot:80,t:'Add your RSSB number',tip:'Tap RSSB Number',d:'Type it exactly as it appears with RSSB.',hot:[31,150,313,56,10]},
+  {img:'send_7',h:718,top:96,bot:80,t:'Submit RSSB number',tip:'Tap Submit',d:'BK fetches your employer and salary details.',hot:[20,638,335,56,8]},
+  {img:'send_8',h:1060,top:0,bot:80,t:'Check your details',tip:'Tap Confirm',d:'Personal, employment and credit details, filled in for you.',hot:[20,980,335,56,8]},
+  {img:'send_9',h:782,top:104,bot:80,t:'Choose the tenure',tip:'Tap Loan tenure',d:'Pick how many months you need to repay.',hot:[28,258,315,56,10]},
+  {img:'send_10',h:782,top:104,bot:80,t:'Enter the amount',tip:'Tap Loan amount',d:'Offers range from RWF 600,000 up to RWF 30 million.',hot:[31,362,313,56,10]},
+  {img:'send_11',h:850,top:104,bot:80,t:'See your repayments',tip:'Tap Continue',d:'Monthly repayment, rate and total interest are worked out instantly.',hot:[20,770,335,56,8]},
+  {img:'send_13',h:678,top:96,bot:80,t:'Confirm the loan',tip:'Tap Confirm',d:'Review the amount, term and total to repay.',hot:[20,598,335,56,8]},
+  {img:'send_13',h:678,top:96,bot:80,sheet:'send_12s',t:'Allow the fee',tip:'Tap Allow',d:'A small processing fee is charged to your account.',hot:[32,499,311,56,8]},
+  {img:'send_14n',h:672,top:0,bot:0,pin:'send_14p',t:'Enter passcode',tip:'Tap any 4 digits',d:'Your 4-digit passcode authorises every payment. Try any numbers.',hot:[124,140,128,24,12]},
+  {img:'send_15',h:921,top:80,bot:110,t:'Request sent',tip:'Tap Loan status',d:'Follow each stage, from offer to disbursement.',hot:[23,364,329,309,14]},
+  {img:'send_16',h:1133,top:80,bot:110,t:'Loan ready',fin:true}]},
+ { key:'bill', name:'BK Pay', short:'Pay shops and merchants in seconds.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Pay any shop or merchant with their merchant code, straight from your BK account.', steps:[
+  {img:'bill_0',h:1219,top:0,bot:110,t:'Open BK Pay',tip:'Tap BK Pay',d:'Pay any merchant right from your home screen.',hot:[14,269,72,96,14]},
+  {img:'bill_1',h:667,top:96,bot:80,t:'Enter the merchant code',tip:'Tap Merchant code',d:'Type the code shown at the till, or scan the QR code.',hot:[30,281,246,56,10]},
+  {img:'bill_2',h:667,top:96,bot:80,t:'Merchant found',tip:'Tap Continue',d:'BK shows the merchant name before you pay.',hot:[20,587,335,56,8]},
+  {img:'bill_3',h:667,top:96,bot:80,t:'Confirm transfer',tip:'Tap Confirm transfer',d:'Check the merchant, account and amount.',hot:[20,587,335,56,8]},
+  {img:'bill_4n',h:672,top:0,bot:0,pin:'bill_4p',t:'Enter passcode',tip:'Tap any 4 digits',d:'Your 4-digit passcode authorises every payment. Try any numbers.',hot:[124,140,128,24,12]},
+  {img:'bill_0',h:1219,top:0,bot:110,sheet:'bill_5s',t:'Payment sent',fin:true}]}
 ];
 
 /* ═════════════ STAGE SCALING ═════════════ */
@@ -926,7 +933,7 @@ function screenHTML(st){
     pk+=[140,172,204,236].map(x=>`<i class="pd" style="left:${x-8}px;top:${152-8-CUT}px"></i>`).join('');
     html=html.replace('</div>'+(where==='scroll'?hot:'')+'</div>', '</div>'+(where==='scroll'?hot:'')+pk+'</div>');
   }
-  if(st.top===96||st.img==='card_2'||st.pin){
+  if(!st.sheet&&(st.top===96||st.top===104||st.img==='card_2'||st.img==='send_8'||st.pin)){
     if(top>CUT) html=html.replace(/(<div class="pin" style="top:0;[^"]*">)/,'$1<button class="bkz" aria-label="Back" style="left:0;top:0"></button>');
     else html=html.replace('<div class="simg"','<button class="bkz" aria-label="Back" style="left:0;top:0"></button><div class="simg"');
   }
