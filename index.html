@@ -1110,7 +1110,7 @@ const flow=document.getElementById('flow'), home=document.getElementById('home')
 const host=document.getElementById('screenHost'), tip=document.getElementById('tip'), line=document.getElementById('tapLine'), finger=document.getElementById('finger');
 let svc=null, step=0, auto=false, autoTimer=null;
 
-document.getElementById('tBack').onclick=()=>{poke();if(homeLive)return;if(step>0){step--;renderStep()}else goHome()};
+document.getElementById('tBack').onclick=()=>{poke();if(homeLive)return;goHome()};
 function openFlow(i){
   document.body.classList.add('inflow');
   if(!homeLive)return; homeLive=false; svc=SERVICES[i]; step=0; auto=false;
