@@ -1232,7 +1232,7 @@ function poke(){lastTouch=Date.now();document.getElementById('idle').classList.r
 addEventListener('pointerdown',poke,true);
 setInterval(()=>{const idle=(Date.now()-lastTouch)/1000;
   if(!homeLive){ if(auto) return; if(idle>50)document.getElementById('idle').classList.add('on'); if(idle>60){goHome();target=Math.round(pos)+offset(START);poke();} }
-  else if(idle>20&&!attract){attract=setInterval(()=>{if(homeLive&&!dragging)go(1)},4000)}
+  else if(idle>15&&!attract){attract=setInterval(()=>{if(homeLive&&!dragging)go(1)},4000)}
 },1000);
 </script>
 </body>
