@@ -796,7 +796,7 @@ const SERVICES = [
   {img:'switch_2',h:1219,top:0,bot:110,t:'Profile switched',fin:true}]},
  { key:'card', name:'Virtual card', short:'A card for safe online shopping, ready in seconds.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Create a prepaid virtual card for online shopping and subscriptions, load it from your account and start paying right away.', steps:[
   {img:'card_0',h:1219,top:0,bot:110,t:'Open More',tip:'Tap More',d:'Cards, loans and savings are one tap away.',hot:[313,1136,47,52,12]},
-  {img:'card_1',h:1219,top:0,bot:324,t:'Go to Cards',tip:'Tap Cards',d:'Manage your physical and virtual cards here.',hot:[80,948,60,62,12]},
+  {img:'card_1',h:1219,top:0,bot:324,spot:true,t:'Go to Cards',tip:'Tap Cards',d:'Manage your physical and virtual cards here.',hot:[80,948,60,62,12]},
   {img:'card_2',h:1356,top:71,bot:110,t:'Your cards',tip:'Tap Create virtual card',d:'See balances, lock a card or create a new one.',hot:[14,1143,345,56,8]},
   {img:'card_3',h:799,top:96,bot:0,t:'Choose a card',tip:'Tap Prepaid - USD',d:'Pay in dollars online, without carrying cash.',hot:[20,245,335,124,14]},
   {img:'card_4',h:872,top:96,bot:80,t:'See the benefits',tip:'Tap Continue',d:'Features, fees and requirements, all in one place.',hot:[20,792,335,56,8]},
@@ -809,7 +809,7 @@ const SERVICES = [
   {img:'card_11',h:911,top:71,bot:0,t:'Card created',fin:true}]},
  { key:'loan', name:'BK advance', short:'Extra cash when you need it.<br>No paperwork.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Opt in to BK Advance and get a credit limit on your current account, approved digitally in minutes.', steps:[
   {img:'loan_0',h:1219,top:0,bot:110,t:'Open More',tip:'Tap More',d:'Cards, loans and savings are one tap away.',hot:[313,1136,47,52,12]},
-  {img:'loan_1',h:1219,top:0,bot:324,t:'Go to Loans',tip:'Tap Loans',d:'All BK loans in one place.',hot:[8,948,60,62,12]},
+  {img:'loan_1',h:1219,top:0,bot:324,spot:true,t:'Go to Loans',tip:'Tap Loans',d:'All BK loans in one place.',hot:[8,948,60,62,12]},
   {img:'loan_2',h:704,top:96,bot:110,t:'Pick a loan',tip:'Tap BK Advance',d:'Instant credit with no paperwork.',hot:[31,124,311,66,12]},
   {img:'loan_3',h:748,top:96,bot:80,t:'See your limits',tip:'Tap Register to BK Advance',d:'Limits, fees and requirements, shown upfront.',hot:[20,668,335,56,8]},
   {img:'loan_4',h:1866,top:96,bot:80,t:'Accept the terms',tip:'Tap I Agree',d:'Scroll through the terms, then agree.',hot:[20,1786,335,56,8]},
@@ -1012,7 +1012,7 @@ function renderStep(first){
   const hot=s.querySelector('[data-hot]');
   if(st.pin){pinCode=[];hot.style.pointerEvents='none';s.querySelectorAll('.pk').forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();pinPress(s,b)}));s.querySelectorAll('.pk').forEach(b=>b.addEventListener('click',e=>e.stopPropagation()));}
   else hot.addEventListener('click',e=>{e.stopPropagation();advance()});
-  const spot=document.createElement('i');spot.className='spot'+(st.sheet?' onsheet':'')+(step===0?'':' off');s.appendChild(spot);
+  const spot=document.createElement('i');spot.className='spot'+(st.sheet?' onsheet':'')+(step===0||st.spot?'':' off');s.appendChild(spot);
   const ref=s.querySelector('.spotref')||hot;
   const placeSpot=()=>{if(!ref.isConnected)return;const sr=s.getBoundingClientRect(),r=ref.getBoundingClientRect(),k=sr.width/375||1;
     const pad=4;spot.style.left=((r.left-sr.left)/k-pad)+'px';spot.style.top=((r.top-sr.top)/k-pad)+'px';spot.style.width=(r.width/k+pad*2)+'px';spot.style.height=(r.height/k+pad*2)+'px';
