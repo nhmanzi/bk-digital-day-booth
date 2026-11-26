@@ -579,6 +579,15 @@ header{pointer-events:none}header .tback,header .hdr-right,header .hdr-right *{p
 
 .scr .homez{position:absolute;left:10px;top:728px;width:60px;height:56px;border:0;padding:0;background:transparent;border-radius:14px;cursor:pointer;z-index:6;-webkit-tap-highlight-color:transparent}
 .scr .homez:active{background:rgba(3,78,162,.1)}
+
+/* v26 - swipeable cards on the Card created screen */
+.scr .ccar{position:absolute;left:0;width:375px;height:174px;background:#fff;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-padding-left:30px;scrollbar-width:none;touch-action:pan-x;overscroll-behavior-x:contain;z-index:2;cursor:grab}
+.scr .ccar::-webkit-scrollbar{display:none}
+.scr .ctrack{display:flex;gap:24px;padding:8px 30px 9px;width:max-content}
+.scr .ctrack img{display:block;width:295px;height:157px;flex:none;scroll-snap-align:start;-webkit-user-drag:none;user-select:none}
+.scr .cdots{position:absolute;left:0;width:375px;height:14px;background:#fff;display:flex;justify-content:center;align-items:center;gap:6px;z-index:2;pointer-events:none}
+.scr .cdots i{width:6px;height:6px;border-radius:3px;background:#e0e2e4;transition:width .3s var(--ease),background .3s}
+.scr .cdots i.on{width:20px;background:#30425e}
 </style>
 </head>
 <body>
@@ -670,7 +679,7 @@ setTimeout(finish,8000);})();
 
   <section id="flow">
     <div class="panel">
-      <div class="svc"><div class="ico" id="fIco"></div><div><small>Guided demo</small><h2 id="fTitle">Virtual Card</h2></div></div>
+      <div class="svc"><div class="ico" id="fIco"></div><h2 id="fTitle">Virtual Card</h2></div>
       <p class="lead" id="fLead"></p>
       <div class="progress"><i id="fProg"></i></div>
       <ul class="steps" id="fSteps"></ul>
@@ -816,7 +825,7 @@ const SERVICES = [
   {img:'card_8',h:754,top:96,bot:80,t:'Initial deposit',tip:'Tap Continue',d:'RWF 100,000 will be loaded on your new card.',hot:[20,674,335,56,8]},
   {img:'card_9',h:667,top:96,bot:80,t:'Review details',tip:'Tap Confirm',d:'Check the card name, type and deposit.',hot:[20,587,335,56,8]},
   {img:'card_10n',h:672,top:0,bot:0,pin:'card_10p',t:'Enter passcode',tip:'Tap any 4 digits',d:'Your 4-digit passcode authorises every payment. Try any numbers.',hot:[42,209,292,381,26]},
-  {img:'card_11',h:911,top:71,bot:0,t:'Card created',fin:true}]},
+  {img:'card_11',h:911,top:71,bot:0,t:'Card created',fin:true,cards:['card_11a','card_11b','card_11c']}]},
  { key:'loan', name:'BK advance', short:'Extra cash when you need it.<br>No paperwork.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Opt in to BK Advance and get a credit limit on your current account, approved digitally in minutes.', steps:[
   {img:'loan_0',h:1219,top:0,bot:110,t:'Open More',tip:'Tap More',d:'Cards, loans and savings are one tap away.',hot:[313,1136,47,52,12]},
   {img:'loan_1',h:1219,top:0,bot:324,spot:true,t:'Go to Loans',tip:'Tap Loans',d:'All BK loans in one place.',hot:[8,948,60,62,12]},
@@ -960,6 +969,10 @@ function screenHTML(st){
     if(top>CUT) html=html.replace(/(<div class="pin" style="top:0;[^"]*">)/,'$1<button class="bkz" aria-label="Back" style="left:0;top:0"></button>');
     else html=html.replace('<div class="simg"','<button class="bkz" aria-label="Back" style="left:0;top:0"></button><div class="simg"');
   }
+  if(st.cards){
+    const car=`<div class="ccar" style="top:${170-CUT}px"><div class="ctrack">${st.cards.map(c=>`<img src="${SCR[c]}" alt="" draggable="false">`).join('')}</div></div><div class="cdots" style="top:${347-CUT}px">${st.cards.map((c,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>`;
+    html=html.replace('<div class="simg"',car+'<div class="simg"');
+  }
   if(st.sheet){
     let sh='';
     if(st.hot){const [x,y,w,hh,r]=st.hot; sh=`<div class="hot8" data-hot style="left:${x}px;top:${y}px;width:${w}px;height:${hh}px;border-radius:${r}px"></div>`;}
@@ -1024,6 +1037,14 @@ function renderStep(first){
     setTimeout(()=>{sh&&sh.remove();dm&&dm.remove()},420)}));
   if(st.fin&&st.bot===110){const hz=document.createElement('button');hz.className='homez';hz.setAttribute('aria-label','Home');s.appendChild(hz);
     hz.addEventListener('click',e=>{e.stopPropagation();poke();goHome()});}
+  const cc=s.querySelector('.ccar');
+  if(cc){const dots=[...s.querySelectorAll('.cdots i')];
+    cc.addEventListener('scroll',()=>{const k=Math.round(cc.scrollLeft/319);dots.forEach((d,i)=>d.classList.toggle('on',i===k))},{passive:true});
+    let dx=null,sl=0;cc.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;dx=e.clientX;sl=cc.scrollLeft;cc.style.scrollSnapType='none';cc.setPointerCapture(e.pointerId)});
+    cc.addEventListener('pointermove',e=>{if(dx===null)return;const k=(+stage.dataset.s||1)*DEV;cc.scrollLeft=sl-(e.clientX-dx)/k});
+    const up=()=>{if(dx===null)return;dx=null;cc.style.scrollSnapType='';const k=Math.round(cc.scrollLeft/319);cc.scrollTo({left:k*319,behavior:'smooth'})};
+    cc.addEventListener('pointerup',up);cc.addEventListener('pointercancel',up);
+    cc.addEventListener('click',e=>e.stopPropagation());}
   if(st.fin){celebrate();return}
   s.querySelectorAll('.bkz').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();poke();if(step>0){step--;renderStep()}else goHome()}));
   const hot=s.querySelector('[data-hot]');
