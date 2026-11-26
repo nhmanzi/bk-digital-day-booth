@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>BK Digital Day · Experience Booth</title>
+<style>
+/*__FONTS__*/
+:root{
+  --ink:#eaf0ff; --muted:rgba(214,226,255,.62);
+  --navy:#030b2e; --royal:#0c2c8c;
+  --accent:#7b8cff; --accent2:#c07bff;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:#010520;color:var(--ink);
+  font-family:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;
+  -webkit-user-select:none;user-select:none;touch-action:none;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+
+/* ───────────── SCENE ───────────── */
+#scene{position:fixed;inset:0;overflow:hidden;
+  background:radial-gradient(120% 80% at 50% 28%,#123fb0 0%,#0a2577 32%,#05124a 58%,#020830 100%)}
+#scene svg.land{position:absolute;inset:0;width:100%;height:100%}
+.aurora{position:absolute;border-radius:50%;filter:blur(80px);opacity:.55;mix-blend-mode:screen;transition:background 1.2s var(--ease)}
+.aurora.a1{width:60vw;height:40vh;left:20vw;top:6vh;background:radial-gradient(closest-side,rgba(64,120,255,.8),transparent);animation:drift1 18s ease-in-out infinite alternate}
+.aurora.a2{width:40vw;height:34vh;left:44vw;top:14vh;background:radial-gradient(closest-side,var(--accent2),transparent);opacity:.28;animation:drift2 22s ease-in-out infinite alternate}
+.aurora.a3{width:46vw;height:30vh;left:6vw;top:18vh;background:radial-gradient(closest-side,var(--accent),transparent);opacity:.24;animation:drift3 26s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(4vw,3vh) scale(1.1)}}
+@keyframes drift2{to{transform:translate(-10vw,4vh) scale(1.2)}}
+@keyframes drift3{to{transform:translate(12vw,-3vh) scale(.9)}}
+.star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;animation:tw 4s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.15}50%{opacity:.85}}
+.shimmer line{animation:sh 5s ease-in-out infinite}
+@keyframes sh{0%,100%{opacity:.08}50%{opacity:.4}}
+#vignette{position:absolute;inset:0;background:radial-gradient(130% 100% at 50% 40%,transparent 50%,rgba(0,2,20,.75) 100%)}
+#scene.dim .land,#scene.dim .star{filter:brightness(.55) blur(2px);transition:filter .9s var(--ease)}
+#scene .land{transition:filter .9s var(--ease)}
+
+/* ───────────── STAGE (1280×800, scaled to fit) ───────────── */
+#stage{position:fixed;left:50%;top:50%;width:1280px;height:800px;transform-origin:50% 50%}
+header{position:absolute;left:48px;right:48px;top:34px;display:flex;align-items:center;justify-content:space-between;z-index:50}
+.logo{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-.02em;font-size:22px}
+.logo .mark{width:34px;height:34px;border:1.6px solid #fff;display:grid;place-items:center;font-weight:600;font-size:15px;letter-spacing:-.04em;border-radius:3px}
+.logo small{font-weight:400;font-size:12px;letter-spacing:.18em;color:var(--muted);margin-left:6px;padding-left:14px;border-left:1px solid rgba(255,255,255,.2)}
+.hdr-right{display:flex;gap:10px;align-items:center}
+.chip{height:36px;padding:0 16px;border-radius:99px;display:flex;align-items:center;gap:8px;font-size:13px;letter-spacing:.04em;
+  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:#45f0a5;box-shadow:0 0 10px #45f0a5;animation:tw 2s infinite}
+.icon-btn{width:36px;height:36px;padding:0;justify-content:center}
+
+/* ───────────── HOME ───────────── */
+#home{position:absolute;inset:0;transition:opacity .6s var(--ease),transform .8s var(--ease)}
+#home.away{opacity:0;transform:scale(.94);pointer-events:none}
+.hero{position:absolute;top:118px;left:0;right:0;text-align:center}
+.greet{font-size:22px;font-weight:300;color:rgba(235,242,255,.85);letter-spacing:.01em;opacity:0;animation:up 1s .2s var(--ease) forwards}
+.headline{margin-top:14px;font-size:50px;line-height:1.08;font-weight:500;letter-spacing:-.025em;opacity:0;animation:up 1s .35s var(--ease) forwards}
+.headline em{font-style:normal;background:linear-gradient(90deg,#9fb6ff,#d6b8ff 50%,#8fe8ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+#ring{position:absolute;left:50%;top:10px;width:0;height:0;transform-style:preserve-3d}
+
+.controls{position:absolute;left:0;right:0;top:672px;display:flex;justify-content:center;align-items:center;gap:30px}
+.arrow{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.22);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 12px 30px -10px rgba(0,0,0,.6);transition:transform .2s}
+.arrow:active{transform:scale(.92)}
+.dots{display:flex;gap:9px}
+.dots span{width:8px;height:8px;border-radius:99px;background:rgba(255,255,255,.28);transition:all .45s var(--ease)}
+.dots span.on{width:30px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.hint{position:absolute;left:0;right:0;top:750px;text-align:center;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.42)}
+.hint b{display:inline-block;animation:swipe 2.4s ease-in-out infinite;font-weight:400}
+@keyframes swipe{0%,100%{transform:translateX(-6px)}50%{transform:translateX(6px)}}
+
+/* ───────────── FLOW ───────────── */
+#flow{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .5s}
+#flow.show{pointer-events:auto;opacity:1}
+.panel{position:absolute;left:56px;top:122px;width:400px;transform:translateX(-30px);opacity:0;transition:all .8s .15s var(--ease)}
+#flow.show .panel{transform:none;opacity:1}
+.svc{display:flex;gap:16px;align-items:center}
+.svc .ico{width:76px;height:81px;filter:drop-shadow(0 12px 18px color-mix(in srgb,var(--accent) 45%,transparent))}
+.svc .ico svg{width:100%;height:100%}
+.svc small{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.svc h2{font-size:34px;font-weight:600;letter-spacing:-.025em;line-height:1.05;margin-top:2px}
+.lead{margin-top:16px;font-size:16px;line-height:1.5;color:rgba(225,233,255,.75);max-width:370px}
+.progress{margin-top:26px;height:4px;border-radius:9px;background:rgba(255,255,255,.12);overflow:hidden}
+.progress i{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s var(--ease);box-shadow:0 0 14px var(--accent)}
+.steps{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:4px}
+.steps li{display:flex;align-items:center;gap:14px;padding:9px 12px;border-radius:14px;font-size:15px;color:rgba(255,255,255,.45);transition:all .4s var(--ease)}
+.steps li .n{width:28px;height:28px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:12px;border:1px solid rgba(255,255,255,.2);transition:all .4s}
+.steps li.done{color:rgba(255,255,255,.7)}
+.steps li.done .n{background:rgba(255,255,255,.12);border-color:transparent}
+.steps li.cur{color:#fff;background:linear-gradient(90deg,rgba(255,255,255,.12),rgba(255,255,255,.02));font-weight:500}
+.steps li.cur .n{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;box-shadow:0 0 18px -2px var(--accent)}
+.actions{margin-top:24px;display:flex;gap:10px;flex-wrap:wrap}
+.btn{height:46px;padding:0 20px;border-radius:99px;display:flex;align-items:center;gap:9px;font-size:14px;font-weight:500;
+  background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent2));border-color:transparent;box-shadow:0 10px 26px -8px var(--accent)}
+.btn.on{background:rgba(255,255,255,.92);color:#0b1640}
+.btn svg{width:18px;height:18px}
+
+.device{position:absolute;left:600px;top:96px;width:318px;height:660px;transform:translateY(60px) scale(.86) rotateX(8deg);opacity:0;transition:all 1s .05s var(--ease)}
+#flow.show .device{transform:none;opacity:1}
+.device .glow{position:absolute;inset:40px -60px;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--accent) 50%,transparent),transparent);filter:blur(30px);opacity:.75}
+.phone{position:absolute;inset:0;border-radius:54px;padding:11px;
+  background:linear-gradient(145deg,#3a3f52,#11131c 30%,#262a38 70%,#4a4f63);
+  box-shadow:0 50px 90px -30px rgba(0,0,10,.9),inset 0 0 0 1.5px rgba(255,255,255,.18),inset 0 0 0 4px #07080d}
+.phone::after{content:"";position:absolute;right:-3px;top:150px;width:4px;height:70px;border-radius:3px;background:#2a2e3b}
+.screen{position:relative;width:100%;height:100%;border-radius:44px;overflow:hidden;background:#f3f5fb}
+.island{position:absolute;top:10px;left:50%;width:96px;height:28px;margin-left:-48px;border-radius:20px;background:#000;z-index:30}
+#screenHost{position:absolute;inset:0}
+.scr{position:absolute;inset:0;animation:scrIn .5s var(--ease)}
+.scr.out{animation:scrOut .35s var(--ease) forwards}
+@keyframes scrIn{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes scrOut{to{transform:translateX(-40px);opacity:0}}
+
+/* tour tooltip */
+#tip{position:absolute;left:944px;width:280px;padding:18px 20px 18px;border-radius:22px;z-index:40;
+  background:linear-gradient(160deg,rgba(255,255,255,.2),rgba(255,255,255,.07));border:1px solid rgba(255,255,255,.26);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 24px 50px -16px rgba(0,0,20,.7);
+  transition:top .55s var(--ease),opacity .4s,transform .4s var(--ease);opacity:0;transform:translateX(16px)}
+#tip.on{opacity:1;transform:none}
+#tip::before{content:"";position:absolute;left:-8px;top:var(--ay,40px);width:16px;height:16px;transform:translateY(-50%) rotate(45deg);
+  background:rgba(255,255,255,.17);border-left:1px solid rgba(255,255,255,.26);border-bottom:1px solid rgba(255,255,255,.26);backdrop-filter:blur(20px)}
+#tip .k{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+#tip .t{margin-top:6px;font-size:19px;font-weight:600;letter-spacing:-.01em;line-height:1.25}
+#tip .d{margin-top:6px;font-size:14px;line-height:1.45;color:rgba(230,236,255,.75)}
+#tip .tap{margin-top:12px;display:flex;align-items:center;gap:8px;font-size:13px;color:#fff}
+#tip .tap i{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-style:normal;font-size:12px}
+#tip.nudge{animation:nudge .5s}
+@keyframes nudge{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(6px)}}
+#tapLine{position:absolute;height:2px;z-index:35;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55));transition:all .55s var(--ease);opacity:0;transform-origin:left}
+#tapLine.on{opacity:1}
+
+/* hot target inside phone */
+.hot{position:relative;z-index:5}
+.hot::after{content:"";position:absolute;inset:-5px;border-radius:inherit;border:2.5px solid var(--hot,#5b6cff);pointer-events:none;animation:ring 1.6s ease-out infinite}
+.hot::before{content:"";position:absolute;inset:-5px;border-radius:inherit;box-shadow:0 0 0 0 var(--hot,#5b6cff);pointer-events:none;animation:ring2 1.6s ease-out infinite}
+@keyframes ring{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.12)}}
+@keyframes ring2{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--hot) 55%,transparent)}100%{box-shadow:0 0 0 14px transparent}}
+.finger{position:absolute;width:44px;height:44px;z-index:25;pointer-events:none;opacity:0;transition:all .7s var(--ease)}
+.finger.on{opacity:1}
+.finger.press{transform:scale(.85)}
+
+/* completion */
+#done{position:absolute;inset:0;z-index:45;pointer-events:none}
+.confetti{position:absolute;width:8px;height:14px;border-radius:2px;top:-20px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(900px) rotate(720deg);opacity:.2}}
+
+/* idle overlay */
+#idle{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);opacity:0;transition:opacity .4s;z-index:60}
+#idle.on{opacity:1}
+
+/* ───────────── PHONE APP UI ───────────── */
+.app{position:absolute;inset:0;display:flex;flex-direction:column;background:#f2f4fa;color:#0c1638;font-size:13px}
+.sb{height:46px;flex:none;display:flex;justify-content:space-between;align-items:flex-end;padding:0 26px 6px 30px;font-size:13px;font-weight:600}
+.sb .r{display:flex;gap:5px;align-items:center}
+.top{background:linear-gradient(160deg,#0a1e6e,#0b2d9a 60%,#1747c9);color:#fff;padding-bottom:18px;border-radius:0 0 28px 28px;position:relative;overflow:hidden}
+.top::after{content:"";position:absolute;right:-60px;top:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.18),transparent)}
+.nav{display:flex;align-items:center;gap:10px;padding:8px 18px 0}
+.nav .bk{width:34px;height:34px;border-radius:12px;background:rgba(255,255,255,.15);display:grid;place-items:center}
+.nav h4{font-size:17px;font-weight:600;flex:1}
+.nav .bk svg{width:18px;height:18px}
+.hello{padding:6px 20px 0;display:flex;align-items:center;gap:10px}
+.av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#ffcf9e,#ff8a8a);display:grid;place-items:center;font-weight:700;color:#5a1d1d;font-size:14px;flex:none}
+.hello > div:nth-child(2){flex:1}
+.hello .bk svg{width:19px;height:19px}
+.hello small{font-size:11px;opacity:.7}
+.hello b{display:block;font-size:15px;font-weight:600}
+.bal{margin:14px 16px 0;padding:14px 16px;border-radius:20px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);position:relative;z-index:1}
+.bal small{font-size:11px;opacity:.75}
+.bal .amt{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-top:2px}
+.bal .amt span{font-size:13px;font-weight:500;opacity:.8;margin-right:4px}
+.bal .row{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:11px;opacity:.8}
+.body{flex:1;overflow:hidden;padding:14px 16px 0;position:relative}
+.sec{font-size:12px;font-weight:600;color:#56608a;margin:4px 2px 10px;display:flex;justify-content:space-between}
+.sec a{color:#2b52e0;font-weight:500}
+.qa{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 6px;background:#fff;border-radius:20px;padding:14px 8px;box-shadow:0 6px 20px -12px rgba(10,30,90,.3)}
+.qa div{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:500;color:#2a3460;border-radius:16px;padding:4px 0}
+.qa .g{width:44px;height:44px;border-radius:15px;display:grid;place-items:center}
+.qa .g svg{width:21px;height:21px}
+.tx{margin-top:14px;background:#fff;border-radius:20px;padding:4px 14px;box-shadow:0 6px 20px -12px rgba(10,30,90,.3)}
+.tx .it{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eef0f7}
+.tx .it:last-child{border:0}
+.tx .it .g{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;flex:none}
+.tx .it .g svg{width:16px;height:16px}
+.tx .it div{flex:1}
+.tx .it b{display:block;font-size:12.5px;font-weight:600}
+.tx .it small{font-size:10.5px;color:#8a92b2}
+.tx .it em{font-style:normal;font-weight:600;font-size:12.5px}
+.tabs{height:70px;flex:none;background:#fff;display:flex;justify-content:space-around;align-items:flex-start;padding-top:10px;border-top:1px solid #e8ebf4}
+.tabs div{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:#9aa1bd}
+.tabs div.on{color:#1d44d8;font-weight:600}
+.tabs svg{width:20px;height:20px}
+.pad{padding:16px}
+.list{background:#fff;border-radius:18px;margin-top:14px;padding:2px 14px;box-shadow:0 6px 20px -12px rgba(10,30,90,.3)}
+.list .li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #eef0f7;font-size:13px;font-weight:500}
+.list .li:last-child{border:0}
+.list .li .g{width:32px;height:32px;border-radius:11px;display:grid;place-items:center;background:#eef2ff;color:#2b52e0}
+.list .li .g svg{width:16px;height:16px}
+.list .li > span:not(.g){flex:1}
+.list .li small{color:#8a92b2;font-weight:400;display:block;font-size:11px}
+.pbtn{height:50px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:14.5px;color:#fff;background:var(--app,#1d44d8);box-shadow:0 10px 20px -10px var(--app,#1d44d8)}
+.pbtn.ghost{background:#e9edfb;color:#1d2b66;box-shadow:none}
+.pbtn svg{width:18px;height:18px}
+.foot{position:absolute;left:16px;right:16px;bottom:28px}
+.h1{font-size:21px;font-weight:700;letter-spacing:-.02em;margin:4px 2px 4px}
+.sub{font-size:12.5px;color:#6b7399;margin:0 2px 14px;line-height:1.45}
+.opt{display:flex;align-items:center;gap:12px;background:#fff;border-radius:18px;padding:14px;margin-bottom:10px;border:1.5px solid transparent;box-shadow:0 6px 18px -12px rgba(10,30,90,.3)}
+.opt.sel{border-color:var(--app)}
+.opt .g{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;flex:none}
+.opt .g svg{width:19px;height:19px}
+.opt div{flex:1}
+.opt b{display:block;font-size:13.5px}
+.opt small{font-size:11px;color:#8a92b2}
+.radio{width:20px;height:20px;border-radius:50%;border:2px solid #c9cfe4;flex:none}
+.opt.sel .radio{border:6px solid var(--app)}
+.amtbig{text-align:center;margin:18px 0 6px}
+.amtbig small{font-size:12px;color:#6b7399}
+.amtbig div{font-size:36px;font-weight:700;letter-spacing:-.03em;margin-top:4px}
+.amtbig div span{font-size:15px;color:#8a92b2;font-weight:500;margin-right:6px}
+.chips{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+.chips span{padding:8px 13px;border-radius:99px;background:#fff;font-size:12px;font-weight:600;color:#3a4470;box-shadow:0 4px 12px -8px rgba(10,30,90,.4)}
+.chips span.sel{background:var(--app);color:#fff}
+.slider{height:6px;border-radius:9px;background:#dfe4f3;margin:16px 6px 4px;position:relative}
+.slider i{position:absolute;left:0;top:0;bottom:0;border-radius:9px;background:var(--app)}
+.slider b{position:absolute;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:#fff;border:5px solid var(--app);box-shadow:0 4px 10px rgba(0,0,0,.2)}
+.slab{display:flex;justify-content:space-between;font-size:10.5px;color:#8a92b2;margin:0 2px}
+.rows{background:#fff;border-radius:18px;padding:4px 16px;box-shadow:0 6px 20px -12px rgba(10,30,90,.3)}
+.rows div{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #eef0f7;font-size:12.5px}
+.rows div:last-child{border:0}
+.rows span{color:#6b7399}
+.rows b{font-weight:600}
+.rows .tot b{font-size:15px}
+.toggle{width:40px;height:24px;border-radius:99px;background:var(--app);position:relative;flex:none}
+.toggle::after{content:"";position:absolute;right:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff}
+.success{display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px 20px 0}
+.tick{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;background:var(--app);color:#fff;box-shadow:0 0 0 12px color-mix(in srgb,var(--app) 15%,transparent),0 0 0 26px color-mix(in srgb,var(--app) 7%,transparent);animation:pop .7s var(--ease)}
+.tick svg{width:40px;height:40px;stroke-dasharray:40;stroke-dashoffset:40;animation:draw .6s .35s forwards}
+@keyframes pop{from{transform:scale(.3);opacity:0}}
+@keyframes draw{to{stroke-dashoffset:0}}
+.success h3{font-size:21px;font-weight:700;margin-top:26px;letter-spacing:-.02em}
+.success p{font-size:12.5px;color:#6b7399;margin-top:6px;line-height:1.5}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.grid3 div{background:#fff;border-radius:18px;padding:14px 6px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:11.5px;font-weight:600;color:#2a3460;box-shadow:0 6px 18px -12px rgba(10,30,90,.35)}
+.grid3 .e{font-size:26px;line-height:1}
+.people{display:flex;gap:12px;overflow:hidden;margin-bottom:14px}
+.people div{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:500;border-radius:50%}
+.people .av{width:52px;height:52px;font-size:16px}
+.field{background:#fff;border-radius:16px;padding:10px 14px;margin-bottom:10px;box-shadow:0 6px 18px -12px rgba(10,30,90,.3)}
+.field small{font-size:10.5px;color:#8a92b2}
+.field b{display:block;font-size:14px;margin-top:2px;letter-spacing:.02em}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px}
+.keypad span{height:42px;display:grid;place-items:center;font-size:19px;font-weight:500;color:#1b2550}
+.token{background:#fff;border:1.5px dashed var(--app);border-radius:16px;padding:14px;margin-top:18px;width:100%}
+.token small{font-size:10.5px;color:#8a92b2;letter-spacing:.12em;text-transform:uppercase}
+.token b{display:block;font-size:17px;letter-spacing:.06em;margin-top:4px}
+.ringp{width:140px;height:140px;position:relative}
+.ringp svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ringp div{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-size:11px;color:#6b7399}
+.ringp div b{display:block;font-size:22px;color:#0c1638}
+.goal{background:#fff;border-radius:18px;padding:14px;box-shadow:0 6px 18px -12px rgba(10,30,90,.3);margin-top:12px}
+.goal .bar{height:8px;border-radius:9px;background:#e6eaf6;margin-top:10px;overflow:hidden}
+.goal .bar i{display:block;height:100%;border-radius:9px;background:var(--app)}
+.goal .hd{display:flex;justify-content:space-between;font-size:13px;font-weight:600}
+.goal small{font-size:11px;color:#8a92b2}
+.bio{display:flex;flex-direction:column;align-items:center;margin-top:30px;gap:14px}
+.bio .fp{width:110px;height:110px;border-radius:34px;display:grid;place-items:center;background:color-mix(in srgb,var(--app) 12%,#fff);color:var(--app)}
+.bio .fp svg{width:60px;height:60px}
+.banner{border-radius:20px;padding:16px;color:#fff;position:relative;overflow:hidden}
+.banner::after{content:"";position:absolute;right:-30px;bottom:-50px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.14)}
+.banner small{font-size:11px;opacity:.85}
+.banner b{display:block;font-size:22px;margin-top:4px;letter-spacing:-.02em}
+.banner p{font-size:11.5px;opacity:.85;margin-top:6px}
+.demo-tag{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.14em;color:#a7aecb;text-transform:uppercase}
+
+/* ── minimal dark background (v3) ── */
+#scene{background:radial-gradient(70% 60% at 50% 48%,#0b1236 0%,#060a22 42%,#02030c 100%)!important}
+#scene svg.land,#stars,.aurora.a1,.aurora.a3{display:none!important}
+.aurora.a2{left:50%;top:56%;width:900px;height:420px;margin:-210px 0 0 -450px;opacity:.16;filter:blur(110px);animation:none;
+  background:radial-gradient(closest-side,var(--accent),transparent)}
+#vignette{background:radial-gradient(120% 95% at 50% 45%,transparent 45%,rgba(0,0,6,.85) 100%)}
+.headline em{background:linear-gradient(90deg,#b9c6ff,#e0ccff 55%,#b4ecff);-webkit-background-clip:text;background-clip:text}
+
+/* ── photo background (v4) ── */
+#scene{background:url(__BG__) center 7.5vh/max(100vw,150vh) auto no-repeat,#030712!important}
+#scene::before{content:'';position:absolute;left:0;right:0;top:0;height:18vh;background:linear-gradient(#030712 40%,rgba(3,7,18,0));z-index:1}
+.aurora.a2{display:none!important}
+#vignette{background:linear-gradient(180deg,rgba(1,3,14,.55) 0%,rgba(1,3,14,0) 32%),radial-gradient(130% 100% at 50% 50%,transparent 60%,rgba(0,0,6,.6) 100%)}
+
+/* ── header / hero / controls per Figma (v5) ── */
+#scene{background:#020a2a url(__BG__) center/cover no-repeat!important}
+#scene::before{display:none!important}
+#vignette{display:none}
+header{left:48px;right:56px;top:35px;align-items:flex-start}
+.bklogo{display:block;margin-top:3px}
+.icon-btn{width:36px;height:36px;border-radius:99px;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.14)}
+.hero{top:97px}
+.greet{font-family:'Sofia Pro','Outfit',sans-serif;font-weight:300;font-size:20px;letter-spacing:.22px;text-transform:uppercase;color:rgba(235,242,255,.85);line-height:23px}
+.headline{margin:24px auto 0;width:518px;font-family:'Bicyclette','Outfit',sans-serif;font-weight:400;font-size:50px;line-height:54px;letter-spacing:-1.25px;color:#EAF0FF}
+.controls{position:absolute;left:0;right:0;top:0;height:0;display:block}
+.controls .arrow{position:absolute;top:434.5px;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+#prev{left:95px} #next{right:95px}
+.dots{position:absolute;left:0;right:0;top:712px;justify-content:center;gap:9px}
+.dots span{background:rgba(255,255,255,.28)}
+.dots span.on{width:30px;background:#fff}
+.hint{display:none}
+
+.qrwrap{position:relative;display:block;width:74px;height:76px;margin-top:-2px}
+.qr{display:block;width:74px;height:76px}
+.qrwrap::before{content:"";position:absolute;inset:1px;border-radius:10px;padding:1px;pointer-events:none;
+  background:linear-gradient(145deg,rgba(255,255,255,.5),rgba(255,255,255,.08) 45%,rgba(255,255,255,0) 60%,rgba(255,255,255,.22));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+
+/* ══ v8 - glass cards on the hills ══ */
+#carousel{position:absolute;left:0;right:0;top:319px;height:380px;cursor:grab}
+#carousel:active{cursor:grabbing}
+#ring{position:absolute;left:50%;top:10px;width:0;height:0}
+.card{position:absolute;width:238px;height:290px;left:-119px;top:0;border-radius:27.6px;transform-origin:50% 50%;will-change:transform,opacity;
+  display:flex;flex-direction:column;align-items:center;text-align:center;overflow:hidden;
+  background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.04));
+  backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);
+  border:.9px solid rgba(255,255,255,.22);
+  box-shadow:inset 0 .9px 0 rgba(255,255,255,.25),0 24px 48px -24px rgba(0,3,25,.55);
+  transition:background .5s var(--ease),border-color .5s var(--ease),box-shadow .5s var(--ease)}
+.card .ico{width:75.6px;height:80.8px;margin-top:29.4px;flex:none;transition:opacity .5s}
+.card .ico svg{width:100%;height:100%;display:block;overflow:visible}
+.card h3{margin-top:21.4px;width:179px;font-family:'Bicyclette','Outfit',sans-serif;font-weight:400;font-size:17.4px;line-height:16.5px;letter-spacing:-.35px;color:#fff}
+.card p{margin-top:7.6px;width:179px;font-family:'Outfit',sans-serif;font-size:9.7px;line-height:13.6px;color:rgba(255,255,255,.55)}
+.card .cta{position:absolute;left:50%;top:197px;transform:translateX(-50%);white-space:nowrap;font-family:'Outfit',sans-serif;font-size:8.4px;letter-spacing:1px;text-transform:uppercase;color:#fff;
+  padding:8px 14px;border-radius:99px;transition:background .5s var(--ease),color .5s,box-shadow .5s}
+.card:not(.active) .ico,.card:not(.active) h3,.card:not(.active) p,.card:not(.active) .cta{opacity:.78}
+/* the main card */
+.card.active{background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,.07));border-color:rgba(255,255,255,.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 30px 60px -22px rgba(0,3,30,.75),0 0 46px -12px rgba(150,190,255,.45)}
+.card.active .cta{background:#fff;color:#0a1f6e;font-weight:600;box-shadow:0 6px 18px -6px rgba(170,200,255,.8)}
+.card.active .ico svg{filter:drop-shadow(0 0 14px rgba(190,215,255,.45))}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;
+  background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.14) 48%,transparent 60%) no-repeat;background-size:260% 100%;background-position:120% 0}
+.card.active::after{opacity:1;animation:shine 5.5s 1s ease-in-out infinite}
+@keyframes shine{0%{background-position:120% 0}35%,100%{background-position:-60% 0}}
+#reflect{position:absolute;left:50%;top:612px;width:330px;height:70px;margin-left:-165px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(170,200,255,.22),rgba(170,200,255,0));filter:blur(6px)}
+#reflect::after{content:"";position:absolute;left:50%;top:-6px;width:150px;height:110px;margin-left:-75px;
+  background:linear-gradient(180deg,rgba(190,215,255,.16),rgba(190,215,255,0));filter:blur(10px);border-radius:40%}
+/* controls */
+.controls .arrow{top:443px}
+#prev{left:45px} #next{right:45px}
+.dots{top:689px}
+
+/* ══ v9 - hug content, 1 MIN DEMO back, refined main card ══ */
+#ring{top:155px}
+.card{height:auto;padding-bottom:24px}
+.card .foot{position:relative;left:auto;right:auto;bottom:auto;width:100%;height:14px;margin-top:16px;flex:none;transition:height .45s var(--ease)}
+.card .foot>span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap;transition:opacity .35s var(--ease)}
+.card .foot .meta{font-family:'Outfit',sans-serif;font-size:12.4px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.45);opacity:1}
+.card .foot .cta{height:32px;line-height:32px;padding:0 24px;border-radius:18px;background:#fff;color:#034FA3;font-family:'Outfit',sans-serif;font-weight:500;font-size:10px;letter-spacing:1px;text-transform:uppercase;box-shadow:none;opacity:0;pointer-events:none}
+.card.active .foot{height:32px}
+.card.active .foot .meta{opacity:0}
+.card.active .foot .cta{opacity:1}
+.card.active{background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.04));border-color:transparent;
+  backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);
+  box-shadow:inset 0 .9px 0 rgba(255,255,255,.25),0 24px 48px -24px rgba(0,3,25,.55)}
+.card::before{content:"";position:absolute;inset:-.9px;border-radius:inherit;padding:2px;pointer-events:none;opacity:0;transition:opacity .45s var(--ease);
+  background:linear-gradient(180deg,#fff,rgba(255,255,255,0));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.card.active::before{opacity:1}
+.card.active::after{animation:none;opacity:0}
+.card.active .ico svg{filter:none}
+
+/* ══ v10 - larger, more legible type (side cards partly compensate for their smaller scale) ══ */
+.card{--k:1;width:238px}
+.card h3{margin-top:20px;width:206px;font-size:calc(21px*var(--k));line-height:1.15;letter-spacing:-.3px}
+.card p{margin-top:8px;width:200px;font-size:calc(13px*var(--k));line-height:1.42;color:rgba(255,255,255,.66)}
+.card .foot{margin-top:18px;height:calc(16px*var(--k))}
+.card .foot .meta{font-size:calc(12.5px*var(--k));letter-spacing:1.6px;color:rgba(255,255,255,.55)}
+.card .foot .cta{height:38px;line-height:38px;padding:0 26px;border-radius:20px;font-size:12px;letter-spacing:1.2px}
+.card.active .foot{height:38px}
+
+/* ══ v11 - hairline that morphs into the TAP TO START button ══ */
+.card .foot{height:calc(10px*var(--k));margin-top:18px}
+.card.active .foot{height:38px}
+.card .foot .cta{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;overflow:hidden;
+  width:72px;height:calc(1.4px*var(--k));line-height:normal;padding:0;border-radius:1px;opacity:1;
+  background-color:rgba(255,255,255,0);
+  transition:width .55s var(--ease),height .55s var(--ease),border-radius .55s var(--ease),background-color .45s var(--ease),box-shadow .45s}
+.card .foot .cta::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.75) 50%,rgba(255,255,255,0));transition:opacity .35s}
+.card .foot .cta b{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;white-space:nowrap;font-weight:500;
+  font-family:'Outfit',sans-serif;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:#034FA3;opacity:0;transition:opacity .25s}
+.card.active .foot .cta{width:176px;height:38px;border-radius:20px;background-color:#fff;box-shadow:0 8px 22px -10px rgba(190,215,255,.7)}
+.card.active .foot .cta::before{opacity:0}
+.card.active .foot .cta b{opacity:1;transition:opacity .3s .22s}
+
+/* ══ v12 - every card state follows its distance from the centre, frame by frame ══ */
+.card,.card.active{transition:none;border-color:rgba(255,255,255,calc(.22*(1 - var(--p,0))));
+  backdrop-filter:blur(calc(25px + 15px*var(--p,0)));-webkit-backdrop-filter:blur(calc(25px + 15px*var(--p,0)))}
+.card::before,.card.active::before{opacity:var(--p,0);transition:none}
+.card .ico,.card h3,.card p,.card:not(.active) .ico,.card:not(.active) h3,.card:not(.active) p{opacity:calc(.78 + .22*var(--p,0));transition:none}
+.card .foot,.card.active .foot{height:calc(10px*var(--k)*(1 - var(--e,0)) + 38px*var(--e,0));transition:none}
+.card .foot .cta,.card.active .foot .cta{transition:none;opacity:1;
+  width:calc(72px + 124px*var(--e,0));height:calc(1.4px*var(--k)*(1 - var(--e,0)) + 38px*var(--e,0));border-radius:calc(1px + 19px*var(--e,0));
+  background-color:rgba(255,255,255,var(--e,0));box-shadow:none}
+.card .foot .cta::before,.card.active .foot .cta::before{opacity:calc(1 - var(--e,0));transition:none}
+.card .foot .cta b,.card.active .foot .cta b{opacity:var(--t,0);transition:none}
+
+.card .foot .cta,.card.active .foot .cta{box-shadow:none!important}
+
+/* ══ v13 — real BK screens in an iPhone 8 ══ */
+.device{left:596px;top:58px;width:338px;height:700px}
+.device .glow{inset:60px -50px}
+.i8{position:absolute;left:0;top:0;width:423px;height:875px;transform:scale(.8);transform-origin:0 0;border-radius:66px;
+  background:linear-gradient(150deg,#3a3d47,#121318 22%,#0b0c10 60%,#24262e);
+  box-shadow:0 60px 100px -40px rgba(0,0,12,.9),inset 0 0 0 2px rgba(255,255,255,.14),inset 0 0 0 7px #08090c}
+.i8 .spk{position:absolute;top:52px;left:50%;width:74px;height:7px;margin-left:-37px;border-radius:9px;background:#1d1f25;box-shadow:inset 0 1px 2px rgba(0,0,0,.8)}
+.i8 .cam{position:absolute;top:49px;left:50%;width:12px;height:12px;margin-left:-82px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#3c4a6b,#0b0d14 60%)}
+.i8 .hbtn{position:absolute;bottom:20px;left:50%;width:66px;height:66px;margin-left:-33px;border-radius:50%;background:#0d0e12;box-shadow:inset 0 0 0 2.5px #2b2e37}
+.i8::before{content:"";position:absolute;left:-3px;top:150px;width:4px;height:30px;border-radius:3px;background:#2a2c34;box-shadow:0 70px 0 #2a2c34,0 140px 0 #2a2c34}
+.scr8{position:absolute;left:24px;top:104px;width:375px;height:667px;overflow:hidden;background:#f4f6fb;border-radius:2px}
+#screenHost{position:absolute;inset:0}
+.scr .sv{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.scr .sv::-webkit-scrollbar{display:none}
+.scr .simg{position:relative;width:375px;background-repeat:no-repeat}
+.scr .pin{position:absolute;left:0;width:375px;background-repeat:no-repeat;z-index:3}
+.hot8{position:absolute;z-index:6;cursor:pointer;--hot:#2f6bff;box-shadow:0 0 0 2.5px #2f6bff,0 0 0 6px rgba(47,107,255,.22)}
+.hot8::after{content:"";position:absolute;inset:-5px;border-radius:inherit;border:2.5px solid var(--hot);pointer-events:none;animation:ring 1.6s ease-out infinite}
+.hot8::before{content:"";position:absolute;inset:-5px;border-radius:inherit;pointer-events:none;animation:ring2 1.6s ease-out infinite;--hot:#2f6bff}
+
+/* ══ v14 — modern iPhone with Dynamic Island ══ */
+.device{left:598px;top:50px;width:336px;height:700px}
+.device .glow{inset:70px -50px}
+.ip{position:absolute;left:0;top:0;width:403px;height:840px;transform:scale(.833);transform-origin:0 0;border-radius:64px;
+  background:linear-gradient(145deg,#5b5f6b,#23252c 12%,#0c0d11 30%,#0c0d11 75%,#3d4049);
+  box-shadow:0 60px 110px -40px rgba(0,0,12,.9),inset 0 0 0 1.5px rgba(255,255,255,.22),inset 0 0 0 5px #15161b,inset 0 0 0 7px #050507}
+.ip .btn{position:absolute;width:4px;border-radius:3px;background:linear-gradient(90deg,#2a2c33,#4a4d57)}
+.ip .b1{left:-3px;top:150px;height:30px}.ip .b2{left:-3px;top:205px;height:58px}.ip .b3{left:-3px;top:275px;height:58px}.ip .b4{right:-3px;top:230px;height:92px}
+.ip .scr8{position:absolute;left:14px;top:14px;width:375px;height:812px;border-radius:50px;overflow:hidden;background:#f4f6fb}
+.ip .island{position:absolute;top:11px;left:50%;width:122px;height:36px;margin-left:-61px;border-radius:20px;background:#000;z-index:30}
+.sbar{position:absolute;left:0;right:0;top:0;height:44px;z-index:29;display:flex;justify-content:space-between;align-items:center;padding:4px 30px 0 40px;pointer-events:none}
+.sbar b{font:600 16px/1 -apple-system,'SF Pro Text','Outfit',sans-serif;letter-spacing:-.2px}
+.sbar .r{display:flex;gap:6px;align-items:center;font-style:normal}
+.sbar.light{color:#fff;fill:#fff}.sbar.light svg{fill:#fff;stroke:#fff}
+.sbar.dark{color:#0b1020}.sbar.dark svg{fill:#0b1020;stroke:#0b1020}
+.scr{position:absolute;inset:0}
+.scr .sbg{position:absolute;left:0;right:0;top:0;height:44px;z-index:4}
+.scr .content{position:absolute;left:0;right:0;top:44px;bottom:0;overflow:hidden}
+.scr .sfill{position:absolute;inset:0}
+.scr .dim{position:absolute;inset:0;background:rgba(10,14,35,.45);z-index:7;animation:fadeIn .4s}
+.scr .sheet{position:absolute;left:0;bottom:0;width:375px;height:667px;background-size:375px 667px;z-index:8;animation:sheetUp .55s var(--ease)}
+@keyframes sheetUp{from{transform:translateY(100%)}}
+@keyframes fadeIn{from{opacity:0}}
+
+.ip .btn{display:none}
+#tip{left:958px}
+
+/* ══ v15 — Figma frame 104:141 ══ */
+header{left:52px;right:52px;top:47px}
+.bklogo{width:140px;height:48px;margin-top:16px}
+.qrwrap{margin-top:-1px}
+.hero{top:131px}
+.greet{font-family:'Sofia Pro','Outfit',sans-serif;font-weight:400;font-size:20px;line-height:23px;letter-spacing:4px}
+.headline{margin:24px auto 0;width:auto;font-family:'Bicyclette','Outfit',sans-serif;font-weight:400;font-size:42px;line-height:49px;letter-spacing:-.5px;color:#EAF0FF}
+.card h3,.card p,.card .foot .cta b{font-family:'Sofia Pro','Outfit',sans-serif}
+.card h3{font-weight:400}
+#ring{top:157.5px}
+.controls .arrow{top:445px}
+.dots{top:715px}
+/* icons */
+.card .ico{width:75.6px;height:80.8px}
+.card .ico img{width:100%;height:100%;display:block}
+.card:not(.active) .ico img{filter:none}
+/* glass: centre card gets a radial glow, stronger blur and a diagonal light border */
+.card .glass2{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:var(--p,0);
+  background:radial-gradient(75% 60% at 50% 42%,rgba(255,255,255,.24),rgba(255,255,255,.04))}
+.card,.card.active{backdrop-filter:blur(calc(50px + 30px*var(--p,0)));-webkit-backdrop-filter:blur(calc(50px + 30px*var(--p,0)))}
+.card::before,.card.active::before{padding:1.5px;background:linear-gradient(128deg,rgba(255,255,255,.1),rgba(255,255,255,.8) 54%,rgba(255,255,255,.1))}
+.card .ico,.card h3,.card p,.card .foot{position:relative}
+/* no hairline: the button grows out of the card's bottom edge */
+.card .foot,.card.active .foot{height:calc(38px*var(--e,0));margin-top:calc(18px*var(--e,0))}
+.card .foot .cta,.card.active .foot .cta{width:196px;height:38px;border-radius:20px;background-color:#fff;
+  opacity:var(--e,0);transform:translate(-50%,-50%) scale(calc(.55 + .45*var(--e,0)))}
+.card .foot .cta::before,.card.active .foot .cta::before{display:none}
+.card .foot .cta b,.card.active .foot .cta b{font-weight:500;font-size:13px;letter-spacing:0;text-transform:none;color:#034FA3}
+/* reflection: a soft streak only */
+#reflect{background:none;filter:none;top:630px}
+#reflect::after{filter:blur(14px)}
+
+/* ══ v16 — centre card = Figma 104:203 exactly ══ */
+.card,.card.active{background:none;
+  box-shadow:0 24px 48px -24px rgba(0,3,25,.55),inset 0 .9px 0 rgba(255,255,255,.25)}
+.card .glass1{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:calc(1 - var(--p,0));
+  background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.04))}
+.card .glass2{opacity:var(--p,0);
+  background:radial-gradient(303px 179px at 61.5px -11px,rgba(255,255,255,.24),rgba(255,255,255,.04))}
+.card::before,.card.active::before{inset:-.9px;padding:1.5px;
+  background:linear-gradient(214.5deg,rgba(255,255,255,.1) -0.8%,rgba(255,255,255,.804) 45.2%,rgba(255,255,255,.1) 84.6%)}
+
+/* ══ v17 — border drawn fully inside the card, like Figma's inside stroke ══ */
+.card,.card.active{border:0}
+.card .glass1{box-shadow:inset 0 0 0 .7px rgba(255,255,255,.22)}
+.card::before,.card.active::before{inset:0;padding:1.5px}
+
+/* ══ v18 — border light travels around the card ══ */
+@property --bang{syntax:'<angle>';inherits:false;initial-value:214.5deg}
+.card::before,.card.active::before{
+  background:linear-gradient(var(--bang),rgba(255,255,255,.1) -0.8%,rgba(255,255,255,.804) 45.2%,rgba(255,255,255,.1) 84.6%);
+  animation:bangSpin 7s linear infinite}
+@keyframes bangSpin{from{--bang:214.5deg}to{--bang:574.5deg}}
+@media (prefers-reduced-motion:reduce){.card::before,.card.active::before{animation:none}}
+
+/* ══ v19 — back button lives beside the logo during a tour ══ */
+.hleft{display:flex;align-items:center;gap:0}
+.tback{width:0;height:48px;margin-top:16px;margin-right:0;border-radius:50%;display:grid;place-items:center;overflow:hidden;opacity:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  transition:width .45s var(--ease),margin-right .45s var(--ease),opacity .35s}
+.inflow .tback{width:48px;margin-right:18px;opacity:1;pointer-events:auto}
+.tback:active{transform:scale(.94)}
+
+/* ══ v20 — panel clears the logo; step list is a window that follows the current step ══ */
+.panel{top:150px}
+.steps{position:relative;height:300px;overflow:hidden;scroll-behavior:smooth;
+  -webkit-mask:linear-gradient(180deg,transparent 0,#000 14%,#000 86%,transparent);mask:linear-gradient(180deg,transparent 0,#000 14%,#000 86%,transparent)}
+.steps li{padding:7px 12px}
+.steps:before,.steps:after{content:"";display:block;height:40px;flex:none}
+
+/* v21 */
+header{pointer-events:none}header .tback,header .hdr-right,header .hdr-right *{pointer-events:auto}
+.steps{overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.steps::-webkit-scrollbar{display:none}
+.steps li{cursor:pointer}
+.steps li:not(.cur):hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.85)}
+.steps li:active{transform:scale(.98)}
+.pk{position:absolute;width:72px;height:72px;border-radius:50%;border:0;padding:0;cursor:pointer;background-color:transparent;background-repeat:no-repeat;opacity:0;transition:opacity .22s ease;-webkit-tap-highlight-color:transparent;z-index:3}
+.pk.down{opacity:1;transition:opacity .04s}
+.pk.del{width:48px;height:48px;background:none!important;border-radius:12px}
+.pk.del.down{opacity:1;background:rgba(3,78,162,.1)!important}
+.pd{position:absolute;width:16px;height:16px;border-radius:50%;background:#034EA2;transform:scale(0);transition:transform .22s cubic-bezier(.34,1.56,.64,1);z-index:3}
+.pd.on{transform:scale(1)}
+.bkz{position:absolute;width:56px;height:46px;border:0;background:transparent;cursor:pointer;z-index:4;border-radius:12px;-webkit-tap-highlight-color:transparent}
+.bkz:active{background:rgba(255,255,255,.18)}
+</style>
+</head>
+<body>
+
+<div id="scene">
+  <div class="aurora a1"></div><div class="aurora a2"></div><div class="aurora a3"></div>
+  <svg class="land" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="m1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1c63"/><stop offset="1" stop-color="#040b33"/></linearGradient>
+      <linearGradient id="m2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#06134a"/><stop offset="1" stop-color="#020824"/></linearGradient>
+      <linearGradient id="m3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#030a2e"/><stop offset="1" stop-color="#01041a"/></linearGradient>
+      <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b2a86" stop-opacity=".55"/><stop offset=".5" stop-color="#041247" stop-opacity=".8"/><stop offset="1" stop-color="#010520"/></linearGradient>
+      <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d5fe0" stop-opacity="0"/><stop offset="1" stop-color="#2d5fe0" stop-opacity=".28"/></linearGradient>
+      <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <mask id="refl"><rect x="0" y="620" width="1600" height="380" fill="url(#fade)"/></mask>
+    </defs>
+    <g id="mtns">
+      <path fill="url(#m1)" d="M0 520 L120 470 L220 495 L330 430 L420 460 L520 400 L600 445 L700 470 L800 455 L900 480 L1000 430 L1090 400 L1180 440 L1290 410 L1400 455 L1500 420 L1600 450 L1600 620 L0 620Z"/>
+      <rect x="0" y="380" width="1600" height="240" fill="url(#haze)"/>
+      <path fill="url(#m2)" d="M0 430 L70 400 L150 445 L250 470 L330 520 L420 560 L520 585 L620 600 L700 610 L700 620 L0 620Z"/>
+      <path fill="url(#m2)" d="M1600 400 L1520 420 L1440 470 L1360 500 L1280 540 L1180 575 L1080 598 L980 610 L980 620 L1600 620Z"/>
+      <path fill="url(#m3)" d="M0 300 L40 320 L90 360 L130 380 L170 420 L220 450 L260 500 L320 545 L380 580 L440 600 L500 612 L560 620 L0 620Z"/>
+      <path fill="url(#m3)" d="M1600 330 L1560 350 L1520 360 L1480 400 L1440 420 L1400 460 L1350 500 L1290 540 L1230 575 L1170 600 L1100 615 L1060 620 L1600 620Z"/>
+    </g>
+    <rect x="0" y="620" width="1600" height="380" fill="url(#lake)"/>
+    <use href="#mtns" transform="translate(0 1240) scale(1 -1)" mask="url(#refl)" opacity=".5"/>
+    <rect x="0" y="618" width="1600" height="3" fill="#5b86ff" opacity=".25"/>
+    <g class="shimmer" stroke="#8fb0ff" stroke-linecap="round">
+      <line x1="560" y1="660" x2="1040" y2="660" stroke-width="1.5" style="animation-delay:-1s"/>
+      <line x1="620" y1="690" x2="980" y2="690" stroke-width="1.2" style="animation-delay:-2.4s"/>
+      <line x1="480" y1="730" x2="1120" y2="730" stroke-width="1.4" style="animation-delay:-.4s"/>
+      <line x1="660" y1="770" x2="940" y2="770" stroke-width="1" style="animation-delay:-3.3s"/>
+      <line x1="300" y1="820" x2="900" y2="820" stroke-width="1.3" style="animation-delay:-1.7s"/>
+      <line x1="900" y1="860" x2="1360" y2="860" stroke-width="1.1" style="animation-delay:-4s"/>
+      <line x1="200" y1="910" x2="760" y2="910" stroke-width="1.2" style="animation-delay:-2s"/>
+    </g>
+  </svg>
+  <div id="stars"></div>
+  <div id="vignette"></div>
+</div>
+
+<div id="stage">
+  <header>
+    <div class="hleft"><button class="tback" id="tBack" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button></div>
+    <div class="hdr-right">
+            <span class="qrwrap"><img class="qr" src="__QR__" width="74" height="76" alt="Scan to get the BK mobile app (bk.rw/get-mobile-app)"></span>
+    </div>
+  </header>
+
+  <section id="home">
+    <div class="hero">
+      <div class="greet" id="greet">BK Digital Day</div>
+      <h1 class="headline">Experience some of our<br>digital services firsthand.</h1>
+    </div>
+    <div id="reflect"></div><div id="carousel"><div id="ring"></div></div>
+    <div class="controls">
+      <button class="arrow" id="prev" aria-label="Previous"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+      <div class="dots" id="dots"></div>
+      <button class="arrow" id="next" aria-label="Next"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    </div>
+    
+  </section>
+
+  <section id="flow">
+    <div class="panel">
+      <div class="svc"><div class="ico" id="fIco"></div><div><small>Guided demo</small><h2 id="fTitle">Virtual Card</h2></div></div>
+      <p class="lead" id="fLead"></p>
+      <div class="progress"><i id="fProg"></i></div>
+      <ul class="steps" id="fSteps"></ul>
+      <div class="actions" id="fActions"></div>
+    </div>
+    <div class="device">
+      <div class="glow"></div>
+      <div class="ip">
+        <div class="scr8"><div id="screenHost"></div>
+          <div class="sbar"><b>9:41</b><i class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 2.6c2.3 0 4.4.9 6 2.4l1.2-1.3A10.4 10.4 0 0 0 8 .8C5.2.8 2.7 1.9.8 3.7L2 5c1.6-1.5 3.7-2.4 6-2.4zm0 3.5c1.3 0 2.5.5 3.4 1.3l1.2-1.3A6.6 6.6 0 0 0 8 4.3c-1.8 0-3.4.7-4.6 1.8l1.2 1.3c.9-.8 2.1-1.3 3.4-1.3zm0 3.4c-.5 0-1 .2-1.3.5L8 11.4l1.3-1.4c-.3-.3-.8-.5-1.3-.5z"/></svg><svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke-opacity=".4"/><rect x="2" y="2" width="19" height="9" rx="2"/><path d="M24 4.5v4c.8-.3 1.3-1.1 1.3-2s-.5-1.7-1.3-2z" fill-opacity=".45"/></svg></i></div>
+          <div class="island"></div>
+          <svg class="finger" id="finger" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="rgba(255,255,255,.55)" stroke="#fff" stroke-width="2"/><circle cx="24" cy="24" r="8" fill="#fff"/></svg>
+        </div></div>
+    </div>
+    <div id="tapLine"></div>
+    <div id="tip"><div class="k" id="tipK">Step 1</div><div class="t" id="tipT"></div><div class="d" id="tipD"></div><div class="tap"><i>☝</i><span id="tipH">Tap the glowing button</span></div></div>
+    <div id="done"></div>
+  </section>
+  <div id="idle">Returning to start…</div>
+</div>
+
+<script>
+/* ═════════════ ICONS (glossy glass, per service) ═════════════ */
+function glassIcon(id, c1, c2, c3, symbol){
+  return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="${id}p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".34"/><stop offset=".55" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#fff" stop-opacity=".16"/></linearGradient>
+    <linearGradient id="${id}e" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".4" stop-color="#fff" stop-opacity=".1"/><stop offset="1" stop-color="${c2}" stop-opacity=".8"/></linearGradient>
+    <linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset=".55" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/></linearGradient>
+    <linearGradient id="${id}h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <radialGradient id="${id}o" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="${c2}" stop-opacity=".9"/><stop offset="1" stop-color="${c2}" stop-opacity="0"/></radialGradient>
+  </defs>
+  <circle cx="64" cy="66" r="44" fill="url(#${id}o)" opacity=".55"/>
+  <g class="float">${symbol(id)}</g>
+  <rect x="14" y="14" width="92" height="92" rx="30" fill="url(#${id}p)" opacity=".55"/>
+  <rect x="14.6" y="14.6" width="90.8" height="90.8" rx="29.4" fill="none" stroke="url(#${id}e)" stroke-width="1.2"/>
+  <path d="M30 18 h60 a26 26 0 0 1 14 6 q-40 -4 -86 30 v-14 a24 24 0 0 1 12 -22z" fill="#fff" opacity=".12"/>
+  </svg>`;
+}
+const SYM = {
+  card: id=>`<g transform="rotate(-14 60 60)"><rect x="26" y="36" width="64" height="42" rx="9" fill="url(#${id}g)" opacity=".55" transform="translate(8 -10)"/></g>
+    <g transform="rotate(-8 60 64)"><rect x="24" y="44" width="70" height="46" rx="10" fill="url(#${id}g)"/>
+    <rect x="24" y="44" width="70" height="23" rx="10" fill="url(#${id}h)"/>
+    <rect x="33" y="56" width="14" height="11" rx="3" fill="#ffe7a8" opacity=".95"/>
+    <path d="M76 58 q4 5 0 10 M81 55 q6 8 0 16" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".9"/>
+    <rect x="33" y="76" width="30" height="4" rx="2" fill="#fff" opacity=".7"/></g>`,
+  save: id=>`<ellipse cx="60" cy="86" rx="28" ry="9" fill="url(#${id}g)" opacity=".6"/>
+    <rect x="32" y="66" width="56" height="20" fill="url(#${id}g)" opacity=".85"/><ellipse cx="60" cy="66" rx="28" ry="9" fill="url(#${id}g)"/>
+    <rect x="32" y="50" width="56" height="16" fill="url(#${id}g)"/><ellipse cx="60" cy="50" rx="28" ry="9" fill="url(#${id}g)"/>
+    <ellipse cx="60" cy="50" rx="28" ry="9" fill="url(#${id}h)"/>
+    <path d="M60 46 V26 M60 34 q-12 -2 -14 -14 q12 0 14 14 M60 30 q10 -1 13 -12 q-11 0 -13 12" stroke="#d9fff1" stroke-width="2.6" fill="#7df5c6" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M38 70 h44" stroke="#fff" stroke-opacity=".35" stroke-width="1.5"/>`,
+  loan: id=>`<circle cx="60" cy="60" r="32" fill="url(#${id}g)" opacity=".35"/>
+    <path d="M66 22 L36 66 H56 L50 98 L84 50 H62 Z" fill="url(#${id}g)" stroke="#fff3c9" stroke-opacity=".55" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M66 22 L36 66 H56 L58 56 H50 Z" fill="url(#${id}h)"/>`,
+  send: id=>`<path d="M22 58 L96 26 L78 96 L58 72 Z" fill="url(#${id}g)"/>
+    <path d="M22 58 L96 26 L58 72 Z" fill="url(#${id}h)"/>
+    <path d="M58 72 L96 26 L64 90 Z" fill="#000" opacity=".18"/>
+    <path d="M58 72 L60 92 L68 80" fill="url(#${id}g)" opacity=".8"/>
+    <path d="M18 80 q8 -2 16 4 M12 92 q10 -3 20 4" stroke="#bfeaff" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".7"/>`,
+  bill: id=>`<path d="M32 22 H88 V96 L80 90 L72 96 L64 90 L56 96 L48 90 L40 96 L32 90 Z" fill="url(#${id}g)"/>
+    <path d="M32 22 H88 V52 H32Z" fill="url(#${id}h)"/>
+    <rect x="42" y="36" width="36" height="5" rx="2.5" fill="#fff" opacity=".9"/><rect x="42" y="48" width="24" height="4" rx="2" fill="#fff" opacity=".6"/>
+    <circle cx="76" cy="74" r="14" fill="#fff" opacity=".95"/><path d="M69 74 l5 5 l9 -10" stroke="${'#2b52e0'}" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`
+};
+
+/* ═════════════ SMALL APP GLYPHS ═════════════ */
+const G = {
+  send:'<path d="M4 12 20 4l-6 16-3-7z"/>',
+  card:'<rect x="3" y="6" width="18" height="12" rx="2.5"/><path d="M3 10h18"/>',
+  save:'<path d="M5 11a7 6 0 0 1 13-2l2 0v4l-2 1a7 6 0 0 1-2 3v2h-3v-1.5a8 8 0 0 1-3 0V19H7v-2.5A6 6 0 0 1 5 11z"/><circle cx="15" cy="10" r=".8"/>',
+  loan:'<path d="M13 3 6 13h5l-1 8 7-10h-5z"/>',
+  bill:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h4"/>',
+  top:'<rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M12 8v6M9 11h6"/>',
+  qr:'<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h2v2h-2zM18 18h2v2h-2zM14 18h2"/>',
+  more:'<circle cx="6" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="18" cy="12" r="1.4"/>',
+  home:'<path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/>',
+  back:'<path d="M15 5 8 12l7 7"/>',
+  chev:'<path d="M9 5l7 7-7 7"/>',
+  lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  slider:'<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>',
+  eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  bank:'<path d="M3 10 12 4l9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 20h18"/>',
+  phone:'<rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 18h2"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+  shield:'<path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6z"/>',
+  check:'<path d="M5 12l5 5 9-10"/>',
+  copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
+  wallet:'<path d="M4 7h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a1 1 0 0 1-1-1V7l12-3v3"/><circle cx="16" cy="13.5" r="1.2"/>',
+  fp:'<path d="M7 12a5 5 0 0 1 10 0c0 3-1 6-2 8M12 12c0 3-1 6-3 8M9.5 12a2.5 2.5 0 0 1 5 0c0 2 0 4-1 6M4.5 9a8 8 0 0 1 15 0M5 15c.5-1 .5-2 .5-3M18.5 12c0 1 0 2.5-.5 4"/>',
+  sig:'<path d="M2 20h2M7 17v3M12 13v7M17 9v11"/>'
+};
+const gi = (k,c='currentColor',w=2)=>`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${G[k]}</svg>`;
+
+/* ═════════════ APP SCREENS ═════════════ */
+const nowStr = ()=>{const d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0')};
+const SB = (dark)=>`<div class="sb" style="color:${dark?'#fff':'#0c1638'}"><span>${nowStr()}</span><span class="r"><svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg><svg width="24" height="11" viewBox="0 0 24 11"><rect x=".5" y=".5" width="20" height="10" rx="3" fill="none" stroke="currentColor" opacity=".5"/><rect x="2" y="2" width="15" height="7" rx="1.8" fill="currentColor"/><rect x="21.5" y="3.5" width="1.6" height="4" rx=".8" fill="currentColor" opacity=".5"/></svg></span></div>`;
+const TABS = (on=0)=>`<div class="tabs">${[['home','Home'],['card','Cards'],['qr','Pay'],['save','Grow'],['user','Me']].map((t,i)=>`<div class="${i==on?'on':''}">${gi(t[0])}${t[1]}</div>`).join('')}</div>`;
+const NAV = (title)=>`${SB(true)}<div class="nav"><div class="bk">${gi('back','#fff',2.4)}</div><h4>${title}</h4></div>`;
+const QA = [
+  ['send','Send','#e7eeff','#2b52e0'],['card','Cards','#e7eeff','#2b52e0'],['save','Savings','#e7eeff','#2b52e0'],['loan','Advance','#e7eeff','#2b52e0'],
+  ['bill','Pay bills','#e7eeff','#2b52e0'],['top','Airtime','#e7eeff','#2b52e0'],['qr','Scan QR','#e7eeff','#2b52e0'],['more','More','#e7eeff','#2b52e0']
+];
+function homeScreen(hot){
+  return `<div class="app">
+  <div class="top">${SB(true)}
+    <div class="hello"><div class="av">AU</div><div><small>Muraho 👋</small><b>Aline Uwase</b></div><div class="bk" style="width:36px;height:36px;border-radius:12px;background:rgba(255,255,255,.14);display:grid;place-items:center">${gi('bell','#fff')}</div></div>
+    <div class="bal"><small>Current account · •••• 4401</small><div class="amt"><span>RWF</span>1,284,500</div><div class="row"><span>Available balance</span><span>${gi('eye','#fff',1.8).replace('<svg','<svg width="16" height="16"')}</span></div></div>
+  </div>
+  <div class="body">
+    <div class="sec">Quick actions</div>
+    <div class="qa">${QA.map(q=>`<div ${q[0]===hot?'data-hot class="hot"':''} style="--hot:${q[3]}"><span class="g" style="background:${q[2]};color:${q[3]}">${gi(q[0])}</span>${q[1]}</div>`).join('')}</div>
+    <div class="sec" style="margin-top:16px">Recent activity <a>See all</a></div>
+    <div class="tx">
+      <div class="it"><span class="g" style="background:#e7eeff;color:#2b52e0">${gi('wallet')}</span><div><b>Salary · Inzozi Ltd</b><small>Today, 08:12</small></div><em style="color:#0f9f75">+ 640,000</em></div>
+      <div class="it"><span class="g" style="background:#e7eeff;color:#2b52e0">${gi('bill')}</span><div><b>Electricity token</b><small>Yesterday</small></div><em>− 10,000</em></div>
+    </div>
+  </div>${TABS(0)}</div>`;
+}
+const wrap = (inner, opts={})=>`<div class="app">${opts.top||''}<div class="body" style="padding-top:${opts.pt??16}px">${inner}</div>${opts.foot?`<div class="foot">${opts.foot}</div>`:''}<div class="demo-tag">Demo · sample data</div></div>`;
+const topBar = t=>`<div class="top" style="padding-bottom:16px">${NAV(t)}</div>`;
+const lightBar = t=>`${SB(false)}<div class="nav" style="color:#0c1638"><div class="bk" style="background:#e9edfb">${gi('back','#0c1638',2.4)}</div><h4>${t}</h4></div>`;
+const btn = (label, hot=true, icon='')=>`<div class="pbtn ${hot?'hot':''}" ${hot?'data-hot':''} style="--hot:var(--app)">${icon?gi(icon,'#fff',2.4):''}${label}</div>`;
+const success = (title, text, extra='', cta='Done')=>`<div class="app"><div style="height:46px"></div><div class="success"><div class="tick">${gi('check','#fff',3)}</div><h3>${title}</h3><p>${text}</p>${extra}</div><div class="foot">${btn(cta,false)}</div><div class="demo-tag">Demo · sample data</div></div>`;
+
+/* ═════════════ SERVICES & FLOWS ═════════════ */
+const SERVICES = [
+ { key:'switch', name:'Switch profile', short:'Move between your personal and business profiles in a tap.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'One login for every profile you manage. Switch between personal and business accounts without signing out.', steps:[
+  {img:'switch_0',h:1219,top:0,bot:110,t:'Open profiles',tip:'Tap your name',d:'All your profiles are behind your name.',hot:[66,44,110,34,10]},
+  {img:'switch_0',h:1219,top:0,bot:110,sheet:'switch_1s',t:'Choose a profile',tip:'Tap Eglise adventiste',d:'Switch between personal and business profiles without signing out.',hot:[32,314,311,64,12]},
+  {img:'switch_2',h:1219,top:0,bot:110,t:'Profile switched',fin:true}]},
+ { key:'card', name:'Virtual card', short:'A card for safe online shopping, ready in seconds.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Create a prepaid virtual card for online shopping and subscriptions, load it from your account and start paying right away.', steps:[
+  {img:'card_0',h:1219,top:0,bot:110,t:'Open More',tip:'Tap More',d:'Cards, loans and savings are one tap away.',hot:[313,1136,47,52,12]},
+  {img:'card_1',h:1219,top:0,bot:324,t:'Go to Cards',tip:'Tap Cards',d:'Manage your physical and virtual cards here.',hot:[80,948,60,62,12]},
+  {img:'card_2',h:1356,top:71,bot:110,t:'Your cards',tip:'Tap Create virtual card',d:'See balances, lock a card or create a new one.',hot:[14,1143,345,56,8]},
+  {img:'card_3',h:799,top:96,bot:0,t:'Choose a card',tip:'Tap Prepaid - USD',d:'Pay in dollars online, without carrying cash.',hot:[20,245,335,124,14]},
+  {img:'card_4',h:872,top:96,bot:80,t:'See the benefits',tip:'Tap Continue',d:'Features, fees and requirements, all in one place.',hot:[20,792,335,56,8]},
+  {img:'card_5',h:731,top:96,bot:80,t:'Accept the terms',tip:'Tap I Agree',d:'Read the terms for prepaid virtual cards.',hot:[20,651,335,56,8]},
+  {img:'card_6',h:864,top:96,bot:80,t:'Personalise it',tip:'Tap Continue',d:'Pick a colour, name your card and set how long it lasts.',hot:[20,784,335,56,8]},
+  {img:'card_7',h:754,top:96,bot:80,t:'Add money',tip:'Tap the amount',d:'Load the card from your BK account.',hot:[15,232,345,64,12]},
+  {img:'card_8',h:754,top:96,bot:80,t:'Initial deposit',tip:'Tap Continue',d:'RWF 100,000 will be loaded on your new card.',hot:[20,674,335,56,8]},
+  {img:'card_9',h:667,top:96,bot:80,t:'Review details',tip:'Tap Confirm',d:'Check the card name, type and deposit.',hot:[20,587,335,56,8]},
+  {img:'card_10n',h:672,top:0,bot:0,pin:'card_10p',t:'Enter passcode',tip:'Tap any 4 digits',d:'Your 4-digit passcode authorises every payment. Try any numbers.',hot:[124,140,128,24,12]},
+  {img:'card_11',h:911,top:71,bot:0,t:'Card created',fin:true}]},
+ { key:'loan', name:'BK advance', short:'Extra cash when you need it.<br>No paperwork.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Opt in to BK Advance and get a credit limit on your current account, approved digitally in minutes.', steps:[
+  {img:'loan_0',h:1219,top:0,bot:110,t:'Open More',tip:'Tap More',d:'Cards, loans and savings are one tap away.',hot:[313,1136,47,52,12]},
+  {img:'loan_1',h:1219,top:0,bot:324,t:'Go to Loans',tip:'Tap Loans',d:'All BK loans in one place.',hot:[8,948,60,62,12]},
+  {img:'loan_2',h:704,top:96,bot:110,t:'Pick a loan',tip:'Tap BK Advance',d:'Instant credit with no paperwork.',hot:[31,124,311,66,12]},
+  {img:'loan_3',h:748,top:96,bot:80,t:'See your limits',tip:'Tap Register to BK Advance',d:'Limits, fees and requirements, shown upfront.',hot:[20,668,335,56,8]},
+  {img:'loan_4',h:1866,top:96,bot:80,t:'Accept the terms',tip:'Tap I Agree',d:'Scroll through the terms, then agree.',hot:[20,1786,335,56,8]},
+  {img:'loan_5n',h:672,top:0,bot:0,pin:'loan_5p',t:'Enter passcode',tip:'Tap any 4 digits',d:'Your 4-digit passcode authorises every payment. Try any numbers.',hot:[124,140,128,24,12]},
+  {img:'loan_6',h:1252,top:80,bot:110,t:'Request sent',tip:'Close the message',d:'Your BK Advance request is being processed.',hot:[323,38,36,36,18]},
+  {img:'loan_7',h:1252,top:80,bot:110,t:'BK Advance active',fin:true}]},
+ { key:'send', name:'BK Quick +', short:'Send instantly to any BK account or mobile wallet.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:"Send money to any bank account in Rwanda in a few taps, with the recipient's name checked before you pay.", steps:[
+  {img:'send_0',h:1219,top:0,bot:110,t:'Open Transfer',tip:'Tap Transfer',d:'Every way to move money starts here.',hot:[160,1136,68,52,12]},
+  {img:'send_1',h:961,top:90,bot:110,t:'Choose transfer type',tip:'Tap Local transfer',d:'Send to any bank account in Rwanda.',hot:[31,154,313,54,10]},
+  {img:'send_2',h:667,top:96,bot:80,t:'Add the recipient',tip:'Tap Account number',d:'Enter the account number and BK finds the holder name.',hot:[31,258,313,56,10]},
+  {img:'send_3',h:699,top:96,bot:80,t:'Recipient found',tip:'Tap Select amount',d:'The account holder name is verified automatically.',hot:[20,619,335,56,8]},
+  {img:'send_4',h:699,top:96,bot:80,t:'Enter the amount',tip:'Tap Make transfer',d:'Your daily limit and the fee are shown before you send.',hot:[20,619,335,56,8]},
+  {img:'send_5',h:667,top:96,bot:80,t:'Confirm details',tip:'Tap Confirm transfer',d:'Check everything one last time.',hot:[20,587,335,56,8]},
+  {img:'send_6n',h:667,top:0,bot:0,pin:'send_6p',t:'Enter passcode',tip:'Tap any 4 digits',d:'Your 4-digit passcode authorises every payment. Try any numbers.',hot:[124,140,128,24,12]},
+  {img:'send_5',h:667,top:96,bot:80,sheet:'send_7s',t:'Transfer initiated',fin:true}]},
+ { key:'bill', name:'BK Pay', short:'Electricity, water, TV and more, paid in seconds.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Pay water, electricity, TV and more from the Pay tab, with the bill account checked before you pay.', steps:[
+  {img:'bill_0',h:1219,top:0,bot:110,t:'Open Pay',tip:'Tap Pay',d:'All your billers live in the Pay tab.',hot:[244,1136,53,52,12]},
+  {img:'bill_1',h:1330,top:90,bot:110,t:'Find your biller',tip:'Tap Utility',d:'Water, electricity and more, grouped by category.',hot:[15,492,345,66,12]},
+  {img:'bill_2',h:1555,top:90,bot:110,t:'Pick the biller',tip:'Tap WASAC',d:'Pay your water bill straight from your account.',hot:[31,552,313,64,14]},
+  {img:'bill_3',h:856,top:96,bot:80,t:'Enter bill number',tip:'Tap Bill number',d:'Type the customer number from your WASAC bill.',hot:[29,458,313,56,10]},
+  {img:'bill_4',h:863,top:96,bot:80,t:'Account verified',tip:'Tap Make payment',d:'BK checks the bill number and shows the account name.',hot:[20,783,335,56,8]},
+  {img:'bill_5',h:672,top:96,bot:80,t:'Confirm payment',tip:'Tap Confirm payment',d:'Review the amount, fee and biller.',hot:[20,592,335,56,8]},
+  {img:'bill_6n',h:672,top:0,bot:0,pin:'bill_6p',t:'Enter passcode',tip:'Tap any 4 digits',d:'Your 4-digit passcode authorises every payment. Try any numbers.',hot:[124,140,128,24,12]},
+  {img:'bill_5',h:672,top:96,bot:80,sheet:'bill_7s',t:'Payment initiated',fin:true}]}
+];
+
+/* ═════════════ STAGE SCALING ═════════════ */
+const stage = document.getElementById('stage');
+function fit(){const s=Math.min(innerWidth/1280,innerHeight/800);stage.style.transform=`translate(-50%,-50%) scale(${s})`;stage.dataset.s=s;}
+addEventListener('resize',fit);fit();
+
+/* stars */
+(function(){const host=document.getElementById('stars');for(let i=0;i<70;i++){const s=document.createElement('i');s.className='star';s.style.left=Math.random()*100+'vw';s.style.top=Math.random()*42+'vh';s.style.opacity=Math.random();s.style.animationDelay=(-Math.random()*4)+'s';const z=Math.random()<.15?3:Math.random()<.5?2:1;s.style.width=s.style.height=z+'px';host.appendChild(s)}})();
+
+/* clock & greeting */
+function tick(){const d=new Date(),h=d.getHours();}
+tick();setInterval(tick,20000);
+
+(document.querySelector('.bklogo')||document.createElement('i')).addEventListener('dblclick',()=>{const d=document.documentElement;(document.fullscreenElement?document.exitFullscreen():(d.requestFullscreen||d.webkitRequestFullscreen||function(){}).call(d))});
+
+/* ═════════════ CAROUSEL ═════════════ */
+const N=SERVICES.length, ring=document.getElementById('ring'), dotsEl=document.getElementById('dots');
+const cards=SERVICES.map((s,i)=>{
+  const el=document.createElement('div');el.className='card';el.style.setProperty('--c',s.c);el.style.setProperty('--c2',s.c2);el.dataset.i=i;
+  el.innerHTML=`<i class="glass1"></i><i class="glass2"></i><div class="ico"><img src="${ICO[s.key]}" alt=""></div><h3>${s.name}</h3><p>${s.short}</p><div class="foot"><span class="cta"><b>Tap to explore →</b></span></div>`;ring.appendChild(el);const d=document.createElement('span');dotsEl.appendChild(d);return el;
+});
+const START=2; let pos=START, target=START, dragging=false, activeIdx=-1, homeLive=true;
+const mod=(a,n)=>((a%n)+n)%n;
+function offset(i){let d=mod(i-pos+N/2,N)-N/2;return d}
+function layout(){
+  const SC=[1,0.697,0.571,0.5], XS=[0,222,393,520];
+  cards.forEach((el,i)=>{
+    const d=offset(i), ad=Math.abs(d), k=Math.min(Math.floor(ad),2), f=Math.min(ad,3)-k;
+    const sc=SC[k]+(SC[k+1]-SC[k])*f, x=Math.sign(d)*(XS[k]+(XS[k+1]-XS[k])*f);
+    el.style.transform=`translate3d(${x}px,-50%,0) scale(${sc})`;
+    el.style.opacity=ad<=2?1:Math.max(0,1-(ad-2)*2.2);
+    el.style.zIndex=100-Math.round(ad*10);
+    el.style.setProperty('--k',(1/Math.sqrt(sc)).toFixed(3));
+    const p=Math.max(0,1-ad), e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2, t=Math.max(0,Math.min(1,(p-.55)/.45));
+    el.style.setProperty('--p',p.toFixed(3));el.style.setProperty('--e',e.toFixed(3));el.style.setProperty('--t',(t*t*(3-2*t)).toFixed(3));
+  });
+  const a=mod(Math.round(pos),N);
+  if(a!==activeIdx){activeIdx=a;cards.forEach((c,i)=>c.classList.toggle('active',i===a));[...dotsEl.children].forEach((d,i)=>d.classList.toggle('on',i===a));
+    const s=SERVICES[a];document.documentElement.style.setProperty('--accent',s.c);document.documentElement.style.setProperty('--accent2',s.c2);}
+}
+let vel2=0,lastF=performance.now();
+function loop(now){ const dt=Math.min(2.5,((now||performance.now())-lastF)/16.667); lastF=now||performance.now();
+  if(homeLive){ if(!dragging){ for(let i=0;i<Math.round(dt*2)||0;i++){ vel2+=(target-pos)*0.026; vel2*=0.70; pos+=vel2; }
+      if(Math.abs(target-pos)<0.0004&&Math.abs(vel2)<0.0004){pos=target;vel2=0;} } layout(); }
+  requestAnimationFrame(loop)}
+loop();
+const go=n=>{target=Math.round(target)+n};
+document.getElementById('prev').onclick=()=>{go(-1);poke()};
+document.getElementById('next').onclick=()=>{go(1);poke()};
+addEventListener('keydown',e=>{poke();if(!homeLive){if(e.key==='Escape')goHome();return}if(e.key==='ArrowLeft')go(-1);if(e.key==='ArrowRight')go(1);if(e.key==='Enter')openFlow(activeIdx)});
+
+const car=document.getElementById('carousel');
+let sx=0,sp=0,lastX=0,lastT=0,vel=0,moved=0,downT=0;
+car.addEventListener('pointerdown',e=>{dragging=true;sx=lastX=e.clientX;sp=pos;lastT=downT=performance.now();vel=0;moved=0;car.setPointerCapture(e.pointerId);poke()});
+car.addEventListener('pointermove',e=>{if(!dragging)return;const s=+stage.dataset.s||1;const dx=(e.clientX-sx)/s;moved=Math.max(moved,Math.abs(dx));
+  pos=sp-dx/222;const t=performance.now();vel=((e.clientX-lastX)/s)/Math.max(1,t-lastT);lastX=e.clientX;lastT=t;});
+car.addEventListener('pointerup',e=>{if(!dragging)return;dragging=false;
+  if(moved<8){ // tap
+    const el=document.elementsFromPoint(e.clientX,e.clientY).find(n=>n.classList&&n.classList.contains('card'));
+    if(el){const i=+el.dataset.i,d=offset(i); if(Math.abs(d)<.5)openFlow(i); else target=Math.round(pos+d);} else target=Math.round(pos);
+    return;}
+  let proj=pos-vel*140/222; proj=Math.max(pos-2,Math.min(pos+2,proj)); target=Math.round(proj); vel2=Math.max(-.08,Math.min(.08,-vel*8.3/222));});
+car.addEventListener('pointercancel',()=>{dragging=false;target=Math.round(pos)});
+
+/* ═════════════ FLOW / TOUR ENGINE ═════════════ */
+const DEV=0.833, CUT=28, V=812-44;
+function screenHTML(st){
+  const src=SCR[st.img], h=st.h, top=st.top||0, bot=st.bot||0, c=SCOL[st.img]||['#0b4ea2','#0b4ea2','#f3f5fa'];
+  const bg=`background-image:url(${src});background-size:375px ${h}px`;
+  let hot='', where='';
+  if(st.hot&&!st.sheet){const [x,y,w,hh,r]=st.hot;
+    where = (bot && y>=h-bot) ? 'bot' : (top && y+hh<=top) ? 'top' : 'scroll';
+    const yy = where==='bot' ? y-(h-bot) : where==='top' ? y-CUT : y-CUT;
+    hot=`<div class="hot8" data-hot style="left:${x}px;top:${yy}px;width:${w}px;height:${hh}px;border-radius:${r}px"></div>`;}
+  let html=`<div class="sfill" style="background:${c[2]}"></div>`+
+    `<div class="sv" style="bottom:${bot}px"><div class="simg" style="height:${h-CUT-bot}px;${bg};background-position:0 -${CUT}px"></div>${where==='scroll'?hot:''}</div>`+
+    (top>CUT?`<div class="pin" style="top:0;height:${top-CUT}px;${bg};background-position:0 -${CUT}px">${where==='top'?hot:''}</div>`:'')+
+    (bot?`<div class="pin" style="bottom:0;height:${bot}px;${bg};background-position:0 -${h-bot}px">${where==='bot'?hot:''}</div>`:'');
+  if(st.pin){
+    const ks=[[167.5,503.5],[375.5,503.5],[583.5,503.5],[167.5,711.5],[375.5,711.5],[583.5,711.5],[167.5,903.5],[375.5,903.5],[583.5,903.5],[375.5,1095.5]].map(p=>[p[0]/2,p[1]/2]);
+    const lab=['1','2','3','4','5','6','7','8','9','0'];
+    let pk=ks.map(([cx,cy],i)=>`<button class="pk" data-k="${lab[i]}" aria-label="${lab[i]}" style="left:${cx-36}px;top:${cy-36-CUT}px;background-image:url(${SCR[st.pin]});background-size:375px ${h}px;background-position:${-(cx-36)}px ${-(cy-36)}px"></button>`).join('');
+    pk+=`<button class="pk del" data-k="del" aria-label="Delete" style="left:266px;top:${548-24-CUT}px"></button>`;
+    pk+=[140,172,204,236].map(x=>`<i class="pd" style="left:${x-8}px;top:${152-8-CUT}px"></i>`).join('');
+    html=html.replace('</div>'+(where==='scroll'?hot:'')+'</div>', '</div>'+(where==='scroll'?hot:'')+pk+'</div>');
+  }
+  if(st.top===96||st.img==='card_2'||st.pin){
+    if(top>CUT) html=html.replace(/(<div class="pin" style="top:0;[^"]*">)/,'$1<button class="bkz" aria-label="Back" style="left:0;top:0"></button>');
+    else html=html.replace('<div class="simg"','<button class="bkz" aria-label="Back" style="left:0;top:0"></button><div class="simg"');
+  }
+  if(st.sheet){
+    let sh='';
+    if(st.hot){const [x,y,w,hh,r]=st.hot; sh=`<div class="hot8" data-hot style="left:${x}px;top:${y}px;width:${w}px;height:${hh}px;border-radius:${r}px"></div>`;}
+    html+=`<div class="sheet" style="background-image:url(${SCR[st.sheet]})">${sh}</div>`;
+  }
+  return `<div class="content">${html}</div><div class="sbg" style="background:linear-gradient(90deg,${c[0]},${c[1]})"></div>`+(st.sheet?'<div class="dim"></div>':'');
+}
+function scrollToHot(scr,st){
+  if(!st.hot||st.sheet) return; const sv=scr.querySelector('.sv'); const [x,y,w,hh]=st.hot; const top=st.top||0, bot=st.bot||0;
+  if(bot && y>=st.h-bot) return; if(top && y+hh<=top) return;
+  const pinTop=Math.max(0,top-CUT), visH=V-pinTop-bot; let t=(y-CUT)+hh/2-(pinTop+visH/2); t=Math.max(0,Math.min(st.h-CUT-V,t));
+  if(t>4) sv.scrollTo({top:t,behavior:'smooth'});
+}
+function sbarTone(st){const c=(SCOL[st.img]||['#0b4ea2'])[0];const n=parseInt(c.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return (r*299+g*587+b*114)/1000>150?'dark':'light';}
+
+const flow=document.getElementById('flow'), home=document.getElementById('home'), scene=document.getElementById('scene');
+const host=document.getElementById('screenHost'), tip=document.getElementById('tip'), line=document.getElementById('tapLine'), finger=document.getElementById('finger');
+let svc=null, step=0, auto=false, autoTimer=null;
+
+document.getElementById('tBack').onclick=()=>{poke();if(homeLive)return;if(step>0){step--;renderStep()}else goHome()};
+function openFlow(i){
+  document.body.classList.add('inflow');
+  if(!homeLive)return; homeLive=false; svc=SERVICES[i]; step=0; auto=false;
+  const el=cards[i]; el.style.transition='transform .7s cubic-bezier(.22,1,.36,1),opacity .5s'; el.style.transform+=' translateZ(260px)'; el.style.opacity=0;
+  setTimeout(()=>{el.style.transition='';},800);
+  home.classList.add('away'); scene.classList.add('dim');
+  document.getElementById('fIco').innerHTML=`<img src="${ICO[svc.key]}" alt="" style="width:100%;height:100%">`;
+  document.getElementById('fTitle').textContent=svc.name;
+  document.getElementById('fLead').textContent=svc.lead;
+  document.getElementById('fSteps').innerHTML=svc.steps.map((s,k)=>`<li data-k="${k}"><span class="n">${k+1}</span>${s.t}</li>`).join('');
+  [...document.getElementById('fSteps').children].forEach(li=>li.onclick=()=>{poke();const k=+li.dataset.k;if(k!==step){step=k;renderStep()}});
+  host.style.setProperty('--app',svc.app); host.parentElement.style.setProperty('--app',svc.app);
+  host.innerHTML='';
+  setTimeout(()=>{flow.classList.add('show');renderStep(true)},250);
+}
+function actionsFor(fin){
+  const a=document.getElementById('fActions');
+  a.innerHTML = fin
+   ? `<button class="btn primary" id="aHome">${gi('home','#fff')}Try another service</button><button class="btn" id="aReplay">↻ Replay</button>`
+   : `<button class="btn" id="aHome">Back home</button><button class="btn ${auto?'on':''}" id="aAuto">${auto?'Pause':'Show me'}</button>`;
+  const q=id=>document.getElementById(id);
+  q('aHome').onclick=goHome;
+  if(fin){q('aReplay').onclick=()=>{step=0;renderStep()};}
+  else{q('aAuto').onclick=()=>{auto=!auto;actionsFor(false);if(auto)scheduleAuto();else clearTimeout(autoTimer)};
+}
+}
+function renderStep(first){
+  clearTimeout(autoTimer);
+  const st=svc.steps[step], total=svc.steps.length;
+  const old=host.querySelector('.scr'); if(old&&!first){old.classList.add('out');setTimeout(()=>old.remove(),340)} else if(old) old.remove();
+  const s=document.createElement('div');s.className='scr';s.innerHTML=screenHTML(st);host.appendChild(s);document.querySelector('.sbar').className='sbar '+sbarTone(st);
+  const sv=s.querySelector('.sv'); sv.addEventListener('scroll',()=>{const h2=s.querySelector('[data-hot]'); if(h2&&tip.classList.contains('on'))placeTip(h2,st,step);},{passive:true});
+  [...document.getElementById('fSteps').children].forEach((li,k)=>{li.className=k<step?'done':k===step?'cur':'';li.querySelector('.n').textContent=k<step?'✓':k+1});
+  {const ul=document.getElementById('fSteps'),cur=ul.children[step];if(cur){ul.scrollTo({top:Math.max(0,cur.offsetTop-ul.clientHeight/2+cur.offsetHeight/2),behavior:'smooth'});}}
+  document.getElementById('fProg').style.width=(step/(total-1)*100)+'%';
+  actionsFor(!!st.fin);
+  tip.classList.remove('on');line.classList.remove('on');finger.classList.remove('on');
+  if(st.fin){celebrate();return}
+  s.querySelectorAll('.bkz').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();poke();if(step>0){step--;renderStep()}else goHome()}));
+  const hot=s.querySelector('[data-hot]');
+  if(st.pin){pinCode=[];hot.style.pointerEvents='none';s.querySelectorAll('.pk').forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();pinPress(s,b)}));s.querySelectorAll('.pk').forEach(b=>b.addEventListener('click',e=>e.stopPropagation()));}
+  else hot.addEventListener('click',e=>{e.stopPropagation();advance()});
+  s.addEventListener('click',()=>{tip.classList.remove('nudge');void tip.offsetWidth;tip.classList.add('nudge')});
+  setTimeout(()=>{scrollToHot(s,st);setTimeout(()=>placeTip(hot,st,step),380);},first?700:300);
+  if(auto)scheduleAuto();
+}
+function placeTip(hot,st,k){
+  if(!hot.isConnected)return;
+  const sc=+stage.dataset.s||1, sr=stage.getBoundingClientRect(), r=hot.getBoundingClientRect();
+  const cy=(r.top+r.height/2-sr.top)/sc, rx=(r.right-sr.left)/sc;
+  document.getElementById('tipK').textContent=`Step ${k+1} of ${svc.steps.length-1}`;
+  document.getElementById('tipT').textContent=st.tip;document.getElementById('tipH').textContent=st.pin?'Use the keypad on the phone':'Tap the glowing button'; document.getElementById('tipD').textContent=st.d;
+  const h=tip.offsetHeight||150; let top=Math.max(110,Math.min(800-h-30,cy-h/2));
+  tip.style.top=top+'px'; tip.style.setProperty('--ay',(cy-top)+'px'); tip.classList.add('on');
+  const x0=Math.min(rx+8,946); line.style.left=x0+'px';line.style.top=cy+'px';line.style.width=(958-x0)+'px';line.classList.add('on');
+}
+let pinCode=[];
+function pinPress(s,b){
+  poke(); const k=b.dataset.k; if(pinCode.length>=4&&k!=='del')return;
+  b.classList.add('down'); setTimeout(()=>b.classList.remove('down'),180);
+  if(k==='del') pinCode.pop(); else pinCode.push(k);
+  s.querySelectorAll('.pd').forEach((d,i)=>d.classList.toggle('on',i<pinCode.length));
+  if(pinCode.length===4){const at=step;setTimeout(()=>{if(step===at&&svc.steps[step].pin)advance()},450)}
+}
+function advance(){ poke(); const st=svc.steps[step]; if(st.fin)return; step++; renderStep() }
+function scheduleAuto(){ clearTimeout(autoTimer); autoTimer=setTimeout(()=>{
+  const scr0=host.querySelector('.scr:last-child');
+  if(auto&&svc.steps[step].pin&&scr0){const seq=['1','9','6','0'];let i=0;const sc=+stage.dataset.s||1,pr=host.getBoundingClientRect();
+    finger.classList.add('on');
+    const tapNext=()=>{if(!auto||!scr0.isConnected)return;const b=scr0.querySelector(`.pk[data-k="${seq[i]}"]`);const r=b.getBoundingClientRect();
+      finger.style.left=((r.left-pr.left+r.width/2)/(sc*DEV)-22)+'px';finger.style.top=((r.top-pr.top+r.height/2)/(sc*DEV)-22)+'px';
+      setTimeout(()=>{finger.classList.add('press');pinPress(scr0,b);setTimeout(()=>finger.classList.remove('press'),150);i++;if(i<4)setTimeout(tapNext,320)},380)};
+    tapNext();return;}
+  const hot=host.querySelector('.scr:last-child [data-hot]'); if(!hot||!auto)return; scrollToHot(host.querySelector('.scr:last-child'),svc.steps[step]);
+  const hr=hot.getBoundingClientRect(), pr=host.getBoundingClientRect(), sc=+stage.dataset.s||1;
+  finger.style.left=((hr.left-pr.left+hr.width/2)/(sc*DEV)-22)+'px'; finger.style.top=((hr.top-pr.top+hr.height/2)/(sc*DEV)-22)+'px';
+  finger.classList.add('on'); setTimeout(()=>finger.classList.add('press'),650); setTimeout(()=>{finger.classList.remove('press');advance()},900);
+ },2600)}
+function celebrate(){
+  const d=document.getElementById('done'); d.innerHTML='';
+  const cols=[svc.c,svc.c2,'#fff','#ffe27a'];
+  for(let i=0;i<70;i++){const c=document.createElement('i');c.className='confetti';c.style.left=(480+Math.random()*560)+'px';c.style.background=cols[i%4];
+    c.style.animationDuration=(1.6+Math.random()*1.6)+'s';c.style.animationDelay=(Math.random()*.5)+'s';c.style.transform=`rotate(${Math.random()*360}deg)`;d.appendChild(c)}
+  setTimeout(()=>d.innerHTML='',3800);
+}
+function goHome(){
+  document.body.classList.remove('inflow');
+  clearTimeout(autoTimer); auto=false; flow.classList.remove('show'); tip.classList.remove('on'); line.classList.remove('on'); finger.classList.remove('on');
+  setTimeout(()=>{home.classList.remove('away');scene.classList.remove('dim');homeLive=true;},350);
+}
+
+/* ═════════════ IDLE / ATTRACT MODE ═════════════ */
+let lastTouch=Date.now(), attract=null;
+function poke(){lastTouch=Date.now();document.getElementById('idle').classList.remove('on');if(attract){clearInterval(attract);attract=null}}
+addEventListener('pointerdown',poke,true);
+setInterval(()=>{const idle=(Date.now()-lastTouch)/1000;
+  if(!homeLive){ if(auto) return; if(idle>50)document.getElementById('idle').classList.add('on'); if(idle>60){goHome();target=Math.round(pos)+offset(START);poke();} }
+  else if(idle>20&&!attract){attract=setInterval(()=>{if(homeLive&&!dragging)go(1)},4000)}
+},1000);
+</script>
+</body>
+</html>
