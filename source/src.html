@@ -591,9 +591,9 @@ header{pointer-events:none}header .tback,header .hdr-right,header .hdr-right *{p
 .scr .cdots i.on{width:20px;background:#30425e}
 
 /* v27 - card customiser */
-.scr .cz{position:absolute;left:37px;width:295px;height:264px;background:#fff;z-index:2}
-.scr .czimg{position:absolute;left:0;top:0;width:295px;height:256px;background:0 0/100% 100% no-repeat}
-.scr .czcard{position:absolute;left:0;top:0;width:295px;height:156px;border-radius:12px;background:0 0/295px 256px no-repeat;display:none}
+.scr .cz{position:absolute;left:37px;width:295px;height:272px;background:#fff;z-index:2}
+.scr .czimg{position:absolute;left:0;top:0;width:295px;height:272px;background:0 0/100% 100% no-repeat}
+.scr .czcard{position:absolute;left:0;top:0;width:295px;height:156px;border-radius:12px;background:0 0/295px 272px no-repeat;display:none}
 .scr .czring{position:absolute;left:236px;top:219.5px;width:44px;height:44px;border-radius:50%;box-shadow:0 0 0 2px #0b3d91;display:none;pointer-events:none}
 .scr .czb{position:absolute;border:0;padding:0;background:transparent;border-radius:12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .scr .czs{border-radius:50%}
@@ -1151,10 +1151,10 @@ const CZ={mode:'c',c:0,i:0,custom:null};
 function wireCustom(s,cz){
   const img=cz.querySelector('.czimg'),card=cz.querySelector('.czcard'),ring=cz.querySelector('.czring');
   const draw=()=>{
-    if(CZ.mode==='i'){img.style.backgroundImage=`url(${SCR['card_6i'+CZ.i]})`;img.style.height='261px';card.style.display='none';ring.style.display='none';}
-    else if(CZ.c===4&&CZ.custom){img.style.backgroundImage=`url(${SCR.card_6cn})`;img.style.height='256px';card.style.display='block';ring.style.display='block';
+    if(CZ.mode==='i'){img.style.backgroundImage=`url(${SCR['card_6i'+CZ.i]})`;img.style.height='272px';card.style.display='none';ring.style.display='none';}
+    else if(CZ.c===4&&CZ.custom){img.style.backgroundImage=`url(${SCR.card_6cn})`;img.style.height='272px';card.style.display='block';ring.style.display='block';
       card.style.backgroundImage=`url(${SCR.card_6c1})`;card.style.filter=`hue-rotate(${(CZ.custom.h-237+360)%360}deg) saturate(1.7) brightness(${CZ.custom.b})`;}
-    else{img.style.backgroundImage=`url(${SCR['card_6c'+CZ.c]})`;img.style.height='256px';card.style.display='none';ring.style.display='none';}
+    else{img.style.backgroundImage=`url(${SCR['card_6c'+CZ.c]})`;img.style.height='272px';card.style.display='none';ring.style.display='none';}
     cz.querySelectorAll('.czs').forEach(b=>b.style.top=(CZ.mode==='i'?218:219)+'px');
   };
   draw();
