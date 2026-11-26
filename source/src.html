@@ -638,6 +638,9 @@ html,body{position:fixed;inset:0;width:100%;height:100%;height:100dvh;overflow:h
 .endA .next b{font-size:16px;font-weight:600}
 .endA .next em{margin-left:auto;font-style:normal;font-size:20px;opacity:.8}
 .endA .eacts{display:flex;gap:10px;margin-top:18px}
+
+/* v32 - feedback QR lives in the end card only */
+.hdr-right .qrwrap{display:none}
 </style>
 </head>
 <body>
@@ -738,7 +741,7 @@ setTimeout(finish,8000);})();
         <div class="k"><i>✓</i><span id="eDone">Done</span></div>
         <h3>That's how easy it is.<br>Now try it for real.</h3>
         <p id="eLine"></p>
-        <div class="qrc"><img src="__APPQR__" alt="QR code to download the BK app"><div><b>Scan to get the BK app</b><span>Point your phone camera at the code. Available on App Store and Google Play.</span></div></div>
+        <div class="qrc"><img src="__QR__" alt="QR code to the BK Digital Day feedback form"><div><b>How was your experience?</b><span>Scan with your phone camera to share quick feedback. It takes less than a minute.</span></div></div>
         <button class="next" id="eNext"><img id="eNextIco" alt=""><div><small>Next up</small><b id="eNextName"></b></div><em>→</em></button>
         <div class="eacts"><button class="btn" id="eHome">Back home</button><button class="btn" id="eReplay">↻ Replay</button></div>
       </div>
