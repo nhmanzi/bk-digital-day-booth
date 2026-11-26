@@ -639,8 +639,9 @@ html,body{position:fixed;inset:0;width:100%;height:100%;height:100dvh;overflow:h
 .endA .next em{margin-left:auto;font-style:normal;font-size:20px;opacity:.8}
 .endA .eacts{display:flex;gap:10px;margin-top:18px}
 
-/* v32 - feedback QR lives in the end card only */
-.hdr-right .qrwrap{display:none}
+/* v32 - header feedback QR on the home screen only; the end card has its own */
+.hdr-right .qrwrap{transition:opacity .35s ease}
+body.inflow .hdr-right .qrwrap{opacity:0;pointer-events:none}
 </style>
 </head>
 <body>
