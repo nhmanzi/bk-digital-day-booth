@@ -21,5 +21,6 @@ for w in [300,400,500,600,700]:
     css+=f"@font-face{{font-family:'Outfit';font-weight:{w};font-style:normal;font-display:block;src:url(data:font/woff2;base64,{b}) format('woff2')}}\n"
 s=s.replace('__BLUR0__','data:image/jpeg;base64,'+base64.b64encode(open('blur0.jpg','rb').read()).decode()).replace('__BLUR1__','data:image/jpeg;base64,'+base64.b64encode(open('blur1.jpg','rb').read()).decode())
 s=s.replace('__BG__','data:image/jpeg;base64,'+base64.b64encode(open('hills.jpg','rb').read()).decode())
+s=s.replace('__APPQR__','data:image/svg+xml;base64,'+base64.b64encode(open('appqr.svg','rb').read()).decode())
 s=s.replace('__QR__','data:image/svg+xml;base64,'+base64.b64encode(open('qr.svg','rb').read()).decode())
 open('../index.html','w').write(s.replace('/*__FONTS__*/',css))

@@ -622,6 +622,27 @@ html,body{position:fixed;inset:0;width:100%;height:100%;height:100dvh;overflow:h
 .scr .qls::-webkit-scrollbar{display:none}
 .scr .qlt{width:max-content;padding:0 10px}
 .scr .qlt img{display:block;width:680px;height:92px;-webkit-user-drag:none;user-select:none;pointer-events:none}
+
+/* v31 - end-of-tour call to action */
+.panel .endA{position:absolute;left:0;top:118px;width:400px;color:#fff;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .5s var(--ease),transform .6s var(--ease),visibility 0s .6s;pointer-events:none}
+.panel.ended .endA{opacity:1;visibility:visible;transform:none;transition:opacity .5s var(--ease) .15s,transform .6s var(--ease) .15s;pointer-events:auto}
+.panel .lead,.panel .progress,.panel .steps,.panel .actions{transition:opacity .4s var(--ease)}
+.panel.ended .lead,.panel.ended .progress,.panel.ended .steps,.panel.ended .actions{opacity:0;pointer-events:none}
+.endA .k{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.endA .k i{width:22px;height:22px;border-radius:50%;background:#2fd17c;display:grid;place-items:center;font-style:normal;font-size:13px;color:#06251a;font-weight:700}
+.endA h3{font-size:30px;font-weight:600;line-height:1.12;letter-spacing:-.02em;margin:14px 0 8px}
+.endA p{font-size:15px;line-height:1.5;color:rgba(255,255,255,.72);margin:0 0 22px;max-width:370px}
+.endA .qrc{display:flex;gap:18px;align-items:center;padding:16px;border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.05));box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.endA .qrc img{flex:none;width:104px;height:104px;padding:10px;border-radius:14px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.endA .qrc b{display:block;font-size:17px;font-weight:600;margin-bottom:4px}
+.endA .qrc span{font-size:13px;color:rgba(255,255,255,.65);line-height:1.45}
+.endA .next{width:100%;margin-top:16px;display:flex;align-items:center;gap:12px;padding:12px 14px;border:0;border-radius:16px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);color:#fff;font:inherit;text-align:left;cursor:pointer;transition:background .2s}
+.endA .next:active{background:rgba(255,255,255,.14)}
+.endA .next img{width:38px;height:40px}
+.endA .next small{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.endA .next b{font-size:16px;font-weight:600}
+.endA .next em{margin-left:auto;font-style:normal;font-size:20px;opacity:.8}
+.endA .eacts{display:flex;gap:10px;margin-top:18px}
 </style>
 </head>
 <body>
@@ -718,6 +739,14 @@ setTimeout(finish,8000);})();
       <div class="progress"><i id="fProg"></i></div>
       <ul class="steps" id="fSteps"></ul>
       <div class="actions" id="fActions"></div>
+      <div class="endA" id="fEnd" aria-live="polite">
+        <div class="k"><i>✓</i><span id="eDone">Done</span></div>
+        <h3>That's how easy it is.<br>Now try it for real.</h3>
+        <p id="eLine"></p>
+        <div class="qrc"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyOTAiIGhlaWdodD0iMjkwIiB2aWV3Qm94PSIwIDAgMjkwIDI5MCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cGF0aCB0cmFuc2Zvcm09InNjYWxlKDEwKSIgY2xhc3M9InFybGluZSIgc3Ryb2tlPSIjZmZmIiBkPSJNMCAwLjVoN20xIDBoMW00IDBoMW0xIDBoMW0xIDBoMW0xIDBoMW0yIDBoN20tMjkgMWgxbTUgMGgxbTEgMGgzbTEgMGgxbTEgMGgxbTEgMGgxbTEgMGgybTIgMGgxbTUgMGgxbS0yOSAxaDFtMSAwaDNtMSAwaDFtMSAwaDJtMSAwaDFtMSAwaDRtMSAwaDFtMSAwaDFtMSAwaDFtMSAwaDNtMSAwaDFtLTI5IDFoMW0xIDBoM20xIDBoMW0xIDBoMW0xIDBoMW0xIDBoM20zIDBoMm0yIDBoMW0xIDBoM20xIDBoMW0tMjkgMWgxbTEgMGgzbTEgMGgxbTEgMGgybTEgMGgybTEgMGgybTMgMGgybTEgMGgxbTEgMGgzbTEgMGgxbS0yOSAxaDFtNSAwaDFtMiAwaDFtMyAwaDFtMyAwaDFtMSAwaDJtMSAwaDFtNSAwaDFtLTI5IDFoN20xIDBoMW0xIDBoMW0xIDBoMW0xIDBoMW0xIDBoMW0xIDBoMW0xIDBoMW0xIDBoN20tMjEgMWgxbTEgMGgxbTEgMGgybTEgMGgxbTEgMGgxbS0xNyAxaDJtMSAwaDFtMSAwaDJtMSAwaDJtMiAwaDFtMSAwaDFtMiAwaDJtMiAwaDFtMSAwaDVtLTI0IDFoMW00IDBoMW0yIDBoMW0yIDBoMm0yIDBoM20zIDBoMW0xIDBoMW0tMjggMWgxbTEgMGg2bTEgMGgzbTQgMGgybTQgMGg2bS0yOSAxaDNtNSAwaDFtMiAwaDdtMSAwaDFtMSAwaDRtMiAwaDFtLTI2IDFoN200IDBoMW0yIDBoMm0yIDBoMW0xIDBoMm0tMjIgMWgxbTQgMGg1bTQgMGgzbTEgMGg0bTMgMGgybS0yMyAxaDFtMiAwaDRtMSAwaDJtMiAwaDFtMSAwaDJtMSAwaDFtMiAwaDFtMSAwaDFtLTI4IDFoMW0zIDBoMW0yIDBoMW00IDBoM20xIDBoMW0zIDBoMW0xIDBoMW0zIDBoMW0tMjggMWgybTEgMGg1bTIgMGgybTQgMGgxbTEgMGgxbTEgMGgzbTIgMGgxbTEgMGgybS0yNyAxaDJtMSAwaDFtMyAwaDFtMSAwaDFtMyAwaDNtMiAwaDNtMyAwaDNtLTI5IDFoMW0yIDBoNW0xIDBoMW0yIDBoNm0zIDBoMW0zIDBoNG0tMjggMWgzbTQgMGgzbTEgMGgxbTEgMGgxbTEgMGg1bTEgMGgybTMgMGgxbS0yOCAxaDFtMiAwaDFtMiAwaDRtMyAwaDFtMSAwaDEwbTIgMGgxbS0yMCAxaDFtNCAwaDJtMSAwaDFtMiAwaDJtMyAwaDFtMyAwaDFtLTI5IDFoN20xIDBoMW0xIDBoMm01IDBoMW0xIDBoMm0xIDBoMW0xIDBoMW0xIDBoM20tMjkgMWgxbTUgMGgxbTIgMGgxbTQgMGgxbTEgMGgxbTMgMGgxbTMgMGgxbS0yNSAxaDFtMSAwaDNtMSAwaDFtMSAwaDNtMSAwaDFtMSAwaDFtNSAwaDZtMSAwaDJtLTI5IDFoMW0xIDBoM20xIDBoMW02IDBoMW0xIDBoMW00IDBoMm0yIDBoMW0xIDBoMW0tMjcgMWgxbTEgMGgzbTEgMGgxbTEgMGgzbTEgMGgxbTEgMGgxbTIgMGgxbTEgMGgxbTMgMGgzbTIgMGgxbS0yOSAxaDFtNSAwaDFtMSAwaDFtMiAwaDFtMSAwaDFtMSAwaDFtMSAwaDRtMiAwaDFtMyAwaDFtLTI4IDFoN201IDBoMm0yIDBoMm0yIDBoM20xIDBoMW0yIDBoMiIvPjwvc3ZnPgo=" alt="QR code to download the BK app"><div><b>Scan to get the BK app</b><span>Point your phone camera at the code. Available on App Store and Google Play.</span></div></div>
+        <button class="next" id="eNext"><img id="eNextIco" alt=""><div><small>Next up</small><b id="eNextName"></b></div><em>→</em></button>
+        <div class="eacts"><button class="btn" id="eHome">Back home</button><button class="btn" id="eReplay">↻ Replay</button></div>
+      </div>
     </div>
     <div class="device">
       <div class="glow"></div>
@@ -979,11 +1008,11 @@ const success = (title, text, extra='', cta='Done')=>`<div class="app"><div styl
 
 /* ═════════════ SERVICES & FLOWS ═════════════ */
 const SERVICES = [
- { key:'switch', name:'Business profile', short:'Move between your personal and business profiles in a tap.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'One login for every profile you manage. Switch between personal and business accounts without signing out.', steps:[
+ { key:'switch', endLine:'Switch between personal and business profiles in the BK app, in one tap.', name:'Business profile', short:'Move between your personal and business profiles in a tap.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'One login for every profile you manage. Switch between personal and business accounts without signing out.', steps:[
   {img:'switch_0',h:1219,ql:true,top:0,bot:110,t:'Open profiles',tip:'Tap your name',d:'All your profiles are behind your name.',hot:[66,44,110,34,10]},
   {img:'switch_0',h:1219,top:0,bot:110,sheet:'switch_1s',t:'Choose a profile',tip:'Tap Eglise adventiste',d:'Switch between personal and business profiles without signing out.',hot:[32,314,311,64,12]},
   {img:'switch_2',h:1219,ql:true,top:0,bot:110,t:'Profile switched',fin:true}]},
- { key:'card', name:'Virtual card', short:'A card for safe online shopping, ready in seconds.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Create a prepaid virtual card for online shopping and subscriptions, load it from your account and start paying right away.', steps:[
+ { key:'card', endLine:'Create a prepaid virtual card in the BK app and shop online right away.', name:'Virtual card', short:'A card for safe online shopping, ready in seconds.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Create a prepaid virtual card for online shopping and subscriptions, load it from your account and start paying right away.', steps:[
   {img:'card_0',h:1219,ql:true,top:0,bot:110,t:'Open More',tip:'Tap More',d:'Cards, loans and savings are one tap away.',hot:[313,1136,47,52,12]},
   {img:'card_1',h:1219,top:0,bot:324,spot:true,t:'Go to Cards',tip:'Tap Cards',d:'Manage your physical and virtual cards here.',hot:[80,948,60,62,12]},
   {img:'card_2',h:1356,top:71,bot:110,t:'Your cards',tip:'Tap Create virtual card',d:'See balances, lock a card or create a new one.',hot:[14,1143,345,56,8]},
@@ -997,7 +1026,7 @@ const SERVICES = [
   {img:'card_10n',h:672,top:0,bot:0,pin:'card_10p',t:'Enter passcode',tip:'Tap any 4 digits',d:'Your 4-digit passcode authorises every payment. Try any numbers.',hot:[42,209,292,381,26]},
   {img:'card_11',h:911,top:71,bot:0,t:'Card created',tip:'Tap your new card',d:'Your card is being set up. Open it to see it with your other cards.',hot:[30,178,295,156,14]},
   {img:'card_12',h:1423,top:71,bot:110,t:'Your cards',fin:true,cards:['card_12a','card_12b','card_12c'],restart:[14,1143,345,56,10]}]},
- { key:'loan', name:'BK advance', short:'Extra cash when you need it.<br>No paperwork.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Opt in to BK Advance and get a credit limit on your current account, approved digitally in minutes.', steps:[
+ { key:'loan', endLine:'Unlock extra cash with BK Advance in the BK app. No paperwork.', name:'BK advance', short:'Extra cash when you need it.<br>No paperwork.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Opt in to BK Advance and get a credit limit on your current account, approved digitally in minutes.', steps:[
   {img:'loan_0',h:1219,ql:true,top:0,bot:110,t:'Open More',tip:'Tap More',d:'Cards, loans and savings are one tap away.',hot:[313,1136,47,52,12]},
   {img:'loan_1',h:1219,top:0,bot:324,spot:true,t:'Go to Loans',tip:'Tap Loans',d:'All BK loans in one place.',hot:[8,948,60,62,12]},
   {img:'loan_2',h:704,top:96,bot:110,t:'Pick a loan',tip:'Tap BK Advance',d:'Instant credit with no paperwork.',hot:[31,124,311,66,12]},
@@ -1007,7 +1036,7 @@ const SERVICES = [
   {img:'loan_5n',h:672,top:0,bot:0,pin:'loan_5p',t:'Enter passcode',tip:'Tap any 4 digits',d:'Your 4-digit passcode authorises every payment. Try any numbers.',hot:[42,209,292,381,26]},
   {img:'loan_6',h:1252,top:80,bot:110,t:'Request sent',tip:'Close the message',d:'Your BK Advance request is being processed.',hot:[323,38,36,36,18]},
   {img:'loan_7',h:1252,top:80,bot:110,t:'BK Advance active',fin:true}]},
- { key:'send', name:'BK Quick +', short:'Get an instant loan right in the BK app.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:"Get an instant loan right in the BK app, with offers from RWF 600,000 up to RWF 30 million.", steps:[
+ { key:'send', endLine:'Get an instant loan in the BK app, from RWF 600,000 up to RWF 30 million.', name:'BK Quick +', short:'Get an instant loan right in the BK app.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:"Get an instant loan right in the BK app, with offers from RWF 600,000 up to RWF 30 million.", steps:[
   {img:'send_0',h:1219,ql:true,top:0,bot:110,t:'Open More',tip:'Tap More',d:'Loans live under More.',hot:[316,1136,41,52,12]},
   {img:'send_1',h:682,top:0,bot:110,t:'Start a loan request',tip:'Tap Request a Loan',d:'Check your loan offers or start a new request.',hot:[15,499,345,56,8]},
   {img:'send_2',h:667,top:96,bot:110,t:'Pick BK Quick +',tip:'Tap BK Quick +',d:'An unsecured personal loan, paid straight into your account.',hot:[24,322,330,64,12]},
@@ -1025,7 +1054,7 @@ const SERVICES = [
   {img:'send_14n',h:672,top:0,bot:0,pin:'send_14p',t:'Enter passcode',tip:'Tap any 4 digits',d:'Your 4-digit passcode authorises every payment. Try any numbers.',hot:[42,209,292,381,26]},
   {img:'send_15',h:921,top:80,bot:110,t:'Request sent',tip:'Tap Loan status',d:'Follow each stage, from offer to disbursement.',hot:[23,364,329,309,14]},
   {img:'send_16',h:1133,top:80,bot:110,t:'Loan ready',fin:true}]},
- { key:'bill', name:'BK Pay', short:'Pay shops and merchants in seconds.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Pay any shop or merchant with their merchant code, straight from your BK account.', steps:[
+ { key:'bill', endLine:'Pay any shop with a merchant code in the BK app. Takes under a minute.', name:'BK Pay', short:'Pay shops and merchants in seconds.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Pay any shop or merchant with their merchant code, straight from your BK account.', steps:[
   {img:'bill_0',h:1219,top:0,bot:110,t:'Open BK Pay',tip:'Tap BK Pay',d:'Pay any merchant right from your home screen.',hot:[14,269,72,96,14]},
   {img:'bill_1',h:667,top:96,bot:80,t:'Enter the merchant code',tip:'Tap Merchant code',d:'Type the code shown at the till, or scan the QR code.',hot:[30,281,246,56,10]},
   {img:'bill_2',h:667,top:96,bot:80,t:'Merchant found',tip:'Tap Continue',d:'BK shows the merchant name before you pay.',hot:[20,587,335,56,8]},
@@ -1207,7 +1236,7 @@ function actionsFor(fin){
 }
 }
 function renderStep(first){
-  clearTimeout(autoTimer);
+  clearTimeout(autoTimer);hideEnd();
   const st=svc.steps[step], total=svc.steps.length;
   const old=host.querySelector('.scr'); if(old&&!first){old.classList.add('out');setTimeout(()=>old.remove(),340)} else if(old) old.remove();
   const s=document.createElement('div');s.className='scr';s.innerHTML=screenHTML(st);host.appendChild(s);document.querySelector('.sbar').className='sbar '+sbarTone(st);
@@ -1236,7 +1265,7 @@ function renderStep(first){
     const up=()=>{if(dx===null)return;dx=null;cc.style.scrollSnapType='';const k=Math.round(cc.scrollLeft/319);cc.scrollTo({left:k*319,behavior:'smooth'})};
     cc.addEventListener('pointerup',up);cc.addEventListener('pointercancel',up);
     cc.addEventListener('click',e=>e.stopPropagation());}
-  if(st.fin){auto=false;clearTimeout(autoTimer);celebrate();return}
+  if(st.fin){celebrate();showEnd();return}
   s.querySelectorAll('.bkz').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();poke();if(step>0){step--;renderStep()}else goHome()}));
   const hot=s.querySelector('[data-hot]');
   if(st.pin){pinCode=[];hot.style.pointerEvents='none';s.querySelectorAll('.pk').forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();pinPress(s,b)}));s.querySelectorAll('.pk').forEach(b=>b.addEventListener('click',e=>e.stopPropagation()));}
@@ -1291,13 +1320,27 @@ function celebrate(){
     c.style.animationDuration=(1.6+Math.random()*1.6)+'s';c.style.animationDelay=(Math.random()*.5)+'s';c.style.transform=`rotate(${Math.random()*360}deg)`;d.appendChild(c)}
   setTimeout(()=>d.innerHTML='',3800);
 }
-function goHome(){
+function goHome(){hideEnd();
   document.body.classList.remove('inflow');
   clearTimeout(autoTimer); auto=false; flow.classList.remove('show'); tip.classList.remove('on'); line.classList.remove('on'); finger.classList.remove('on');
   setTimeout(()=>{home.classList.remove('away');scene.classList.remove('dim');homeLive=true;layoutDirty=true;layout();},350);
 }
 
 
+
+/* ═════════════ END-OF-TOUR CALL TO ACTION ═════════════ */
+let endTimer=null;
+function hideEnd(){clearTimeout(endTimer);document.querySelector('.panel').classList.remove('ended')}
+function showEnd(){clearTimeout(endTimer);endTimer=setTimeout(()=>{if(homeLive||!svc||!svc.steps[step].fin)return;
+  const i=SERVICES.indexOf(svc),nx=SERVICES[(i+1)%N];
+  document.getElementById('eDone').textContent=`Done in ${svc.steps.length} steps`;
+  document.getElementById('eLine').textContent=svc.endLine||'';
+  document.getElementById('eNextIco').src=ICO[nx.key];document.getElementById('eNextName').textContent=nx.name;
+  document.querySelector('.panel').classList.add('ended')},1500)}
+document.getElementById('eHome').onclick=()=>{poke();goHome()};
+document.getElementById('eReplay').onclick=()=>{poke();step=0;renderStep()};
+document.getElementById('eNext').onclick=()=>{poke();const nx=(SERVICES.indexOf(svc)+1)%N;goHome();
+  setTimeout(()=>{target=Math.round(pos)+(((nx-activeIdx)%N+N)%N);pos=target;vel2=0;layoutDirty=true;layout();openFlow(nx)},450)};
 /* ═════════════ CARD CUSTOMISER (Virtual card) ═════════════ */
 const CZ={mode:'c',c:0,i:0,custom:null};
 function wireCustom(s,cz){
