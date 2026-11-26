@@ -588,6 +588,22 @@ header{pointer-events:none}header .tback,header .hdr-right,header .hdr-right *{p
 .scr .cdots{position:absolute;left:0;width:375px;height:14px;background:#fff;display:flex;justify-content:center;align-items:center;gap:6px;z-index:2;pointer-events:none}
 .scr .cdots i{width:6px;height:6px;border-radius:3px;background:#e0e2e4;transition:width .3s var(--ease),background .3s}
 .scr .cdots i.on{width:20px;background:#30425e}
+
+/* v27 - card customiser */
+.scr .cz{position:absolute;left:37px;width:295px;height:264px;background:#fff;z-index:2}
+.scr .czimg{position:absolute;left:0;top:0;width:295px;height:256px;background:0 0/100% 100% no-repeat}
+.scr .czcard{position:absolute;left:0;top:0;width:295px;height:156px;border-radius:12px;background:0 0/295px 256px no-repeat;display:none}
+.scr .czring{position:absolute;left:236px;top:219.5px;width:44px;height:44px;border-radius:50%;box-shadow:0 0 0 2px #0b3d91;display:none;pointer-events:none}
+.scr .czb{position:absolute;border:0;padding:0;background:transparent;border-radius:12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.scr .czs{border-radius:50%}
+.scr .czb:active{background:rgba(3,78,162,.08)}
+.scr .sheet.cpick{z-index:8}
+.scr .pkcov{position:absolute;left:24px;width:327px;height:32px;background:#fff}
+.scr .pkprev{position:absolute;width:56px;height:56px;border-radius:12px}
+.scr .pktr{position:absolute;left:40px;width:295px;height:8px;margin-top:4px;border-radius:4px;touch-action:none;cursor:pointer}
+.scr .pktr::before{content:"";position:absolute;left:-12px;right:-12px;top:-14px;bottom:-14px}
+.scr .pkh{background:linear-gradient(90deg,#f00,#ff0 17%,#0f0 33%,#0ff 50%,#00f 67%,#f0f 83%,#f00)}
+.scr .pktr i{position:absolute;top:-4px;width:16px;height:16px;margin-left:-8px;border-radius:50%;box-shadow:0 0 0 3px #fff,0 2px 6px rgba(0,0,0,.25);pointer-events:none}
 </style>
 </head>
 <body>
@@ -820,7 +836,7 @@ const SERVICES = [
   {img:'card_3',h:799,top:96,bot:0,t:'Choose a card',tip:'Tap Prepaid - USD',d:'Pay in dollars online, without carrying cash.',hot:[20,245,335,124,14]},
   {img:'card_4',h:872,top:96,bot:80,t:'See the benefits',tip:'Tap Continue',d:'Features, fees and requirements, all in one place.',hot:[20,792,335,56,8]},
   {img:'card_5',h:731,top:96,bot:80,t:'Accept the terms',tip:'Tap I Agree',d:'Read the terms for prepaid virtual cards.',hot:[20,651,335,56,8]},
-  {img:'card_6',h:864,top:96,bot:80,t:'Personalise it',tip:'Tap Continue',d:'Pick a colour, name your card and set how long it lasts.',hot:[20,784,335,56,8]},
+  {img:'card_6',h:864,top:96,bot:80,custom:true,t:'Personalise it',tip:'Style your card, then tap Continue',d:'Try a colour or an image on the card, or make your own colour.',hot:[20,784,335,56,8]},
   {img:'card_7',h:754,top:96,bot:80,t:'Add money',tip:'Tap the amount',d:'Load the card from your BK account.',hot:[15,232,345,64,12]},
   {img:'card_8',h:754,top:96,bot:80,t:'Initial deposit',tip:'Tap Continue',d:'RWF 100,000 will be loaded on your new card.',hot:[20,674,335,56,8]},
   {img:'card_9',h:667,top:96,bot:80,t:'Review details',tip:'Tap Confirm',d:'Check the card name, type and deposit.',hot:[20,587,335,56,8]},
@@ -969,6 +985,11 @@ function screenHTML(st){
     if(top>CUT) html=html.replace(/(<div class="pin" style="top:0;[^"]*">)/,'$1<button class="bkz" aria-label="Back" style="left:0;top:0"></button>');
     else html=html.replace('<div class="simg"','<button class="bkz" aria-label="Back" style="left:0;top:0"></button><div class="simg"');
   }
+  if(st.custom){
+    html=html.replace('<div class="simg"',`<div class="cz" style="top:${112-CUT}px"><div class="czimg"></div><div class="czcard"></div><div class="czring"></div>`+
+      `<button class="czb" data-m="c" style="left:8px;top:168px;width:138px;height:40px"></button><button class="czb" data-m="i" style="left:146px;top:168px;width:138px;height:40px"></button>`+
+      [0,1,2,3,4].map(i=>`<button class="czb czs" data-s="${i}" style="left:${20+54*i}px;top:219px;width:44px;height:44px"></button>`).join('')+`</div><div class="simg"`);
+  }
   if(st.cards){
     const car=`<div class="ccar" style="top:${170-CUT}px"><div class="ctrack">${st.cards.map(c=>`<img src="${SCR[c]}" alt="" draggable="false">`).join('')}</div></div><div class="cdots" style="top:${347-CUT}px">${st.cards.map((c,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>`;
     html=html.replace('<div class="simg"',car+'<div class="simg"');
@@ -996,7 +1017,7 @@ let svc=null, step=0, auto=false, autoTimer=null;
 document.getElementById('tBack').onclick=()=>{poke();if(homeLive)return;goHome()};
 function openFlow(i){
   document.body.classList.add('inflow');
-  if(!homeLive)return; homeLive=false; svc=SERVICES[i]; step=0; auto=false;
+  if(!homeLive)return; homeLive=false; svc=SERVICES[i]; step=0; auto=false; CZ.mode='c';CZ.c=0;CZ.i=0;CZ.custom=null;
   const el=cards[i]; el.style.transition='transform .7s cubic-bezier(.22,1,.36,1),opacity .5s'; el.style.transform+=' translateZ(260px)'; el.style.opacity=0;
   setTimeout(()=>{el.style.transition='';},800);
   home.classList.add('away'); scene.classList.add('dim');
@@ -1037,6 +1058,7 @@ function renderStep(first){
     setTimeout(()=>{sh&&sh.remove();dm&&dm.remove()},420)}));
   if(st.fin&&st.bot===110){const hz=document.createElement('button');hz.className='homez';hz.setAttribute('aria-label','Home');s.appendChild(hz);
     hz.addEventListener('click',e=>{e.stopPropagation();poke();goHome()});}
+  const cz=s.querySelector('.cz'); if(cz) wireCustom(s,cz);
   const cc=s.querySelector('.ccar');
   if(cc){const dots=[...s.querySelectorAll('.cdots i')];
     cc.addEventListener('scroll',()=>{const k=Math.round(cc.scrollLeft/319);dots.forEach((d,i)=>d.classList.toggle('on',i===k))},{passive:true});
@@ -1106,6 +1128,51 @@ function goHome(){
   setTimeout(()=>{home.classList.remove('away');scene.classList.remove('dim');homeLive=true;layoutDirty=true;layout();},350);
 }
 
+
+/* ═════════════ CARD CUSTOMISER (Virtual card) ═════════════ */
+const CZ={mode:'c',c:0,i:0,custom:null};
+function wireCustom(s,cz){
+  const img=cz.querySelector('.czimg'),card=cz.querySelector('.czcard'),ring=cz.querySelector('.czring');
+  const draw=()=>{
+    if(CZ.mode==='i'){img.style.backgroundImage=`url(${SCR['card_6i'+CZ.i]})`;img.style.height='261px';card.style.display='none';ring.style.display='none';}
+    else if(CZ.c===4&&CZ.custom){img.style.backgroundImage=`url(${SCR.card_6cn})`;img.style.height='256px';card.style.display='block';ring.style.display='block';
+      card.style.backgroundImage=`url(${SCR.card_6c1})`;card.style.filter=`hue-rotate(${(CZ.custom.h-237+360)%360}deg) saturate(1.7) brightness(${CZ.custom.b})`;}
+    else{img.style.backgroundImage=`url(${SCR['card_6c'+CZ.c]})`;img.style.height='256px';card.style.display='none';ring.style.display='none';}
+    cz.querySelectorAll('.czs').forEach(b=>b.style.top=(CZ.mode==='i'?218:219)+'px');
+  };
+  draw();
+  cz.querySelectorAll('.czb').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();poke();
+    if(b.dataset.m){CZ.mode=b.dataset.m;draw();return}
+    const k=+b.dataset.s;
+    if(CZ.mode==='i'){CZ.i=k;draw();return}
+    if(k===4){openPicker(s,()=>{CZ.c=4;draw()});return}
+    CZ.c=k;draw();}));
+}
+function openPicker(s,done){
+  const c=CZ.custom||{h:200,b:1};let h=c.h,b=c.b;
+  const dim=document.createElement('div');dim.className='dim';
+  const sh=document.createElement('div');sh.className='sheet cpick';sh.style.backgroundImage=`url(${SCR.card_6pk})`;
+  sh.innerHTML=`<i class="pkprev" style="left:32px;top:272px"></i>
+   <i class="pkcov" style="top:376px"></i><i class="pkcov" style="top:448px"></i><div class="pktr pkh" style="top:384px"><i></i></div><div class="pktr pkl" style="top:456px"><i></i></div>
+   <button class="sbtn" data-a="ok" style="left:32px;top:508px;width:311px;height:56px;border-radius:10px"></button>
+   <button class="sbtn" data-a="no" style="left:32px;top:580px;width:311px;height:48px;border-radius:10px"></button>
+   <button class="sbtn" data-a="no" style="left:312px;top:266px;width:36px;height:36px;border-radius:10px"></button>`;
+  s.appendChild(dim);s.appendChild(sh);
+  const col=()=>`hsl(${h} 72% ${Math.round(28+b*24)}%)`;
+  const paint=()=>{sh.querySelector('.pkprev').style.background=col();
+    const th=sh.querySelector('.pkh i'),tl=sh.querySelector('.pkl i');th.style.left=(h/360*295)+'px';th.style.background=`hsl(${h} 90% 50%)`;
+    tl.style.left=((b-0.6)/0.8*295)+'px';tl.style.background=col();
+    sh.querySelector('.pkl').style.background=`linear-gradient(90deg,hsl(${h} 72% 22%),hsl(${h} 72% 60%))`;};
+  paint();
+  const drag=(el,set)=>{const move=e=>{const r=el.getBoundingClientRect();set(Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)));paint()};
+    el.addEventListener('pointerdown',e=>{e.stopPropagation();poke();el.setPointerCapture(e.pointerId);move(e);el.onpointermove=move});
+    el.addEventListener('pointerup',()=>{el.onpointermove=null});el.addEventListener('click',e=>e.stopPropagation());};
+  drag(sh.querySelector('.pkh'),v=>h=Math.round(v*360));drag(sh.querySelector('.pkl'),v=>b=0.6+v*0.8);
+  const close=()=>{sh.classList.add('closing');dim.classList.add('closing');setTimeout(()=>{sh.remove();dim.remove()},420)};
+  sh.querySelectorAll('.sbtn').forEach(bt=>bt.addEventListener('click',e=>{e.stopPropagation();poke();
+    if(bt.dataset.a==='ok'){CZ.custom={h,b};done();}close();}));
+  sh.addEventListener('click',e=>e.stopPropagation());dim.addEventListener('click',e=>{e.stopPropagation();close()});
+}
 /* ═════════════ IDLE / ATTRACT MODE ═════════════ */
 let lastTouch=Date.now(), attract=null;
 function poke(){lastTouch=Date.now();document.getElementById('idle').classList.remove('on');if(attract){clearInterval(attract);attract=null}}
