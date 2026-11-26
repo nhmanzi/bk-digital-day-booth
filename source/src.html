@@ -576,6 +576,9 @@ header{pointer-events:none}header .tback,header .hdr-right,header .hdr-right *{p
 .scr .sheet.closing{transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,1,1)}
 .scr .dim.closing{opacity:0;transition:opacity .4s}
 
+
+.scr .homez{position:absolute;left:10px;top:728px;width:60px;height:56px;border:0;padding:0;background:transparent;border-radius:14px;cursor:pointer;z-index:6;-webkit-tap-highlight-color:transparent}
+.scr .homez:active{background:rgba(3,78,162,.1)}
 </style>
 </head>
 <body>
@@ -1019,6 +1022,8 @@ function renderStep(first){
     if(b.dataset.a==='ok'){step=0;renderStep();return}
     const sh=s.querySelector('.sheet'),dm=s.querySelector('.dim');sh&&sh.classList.add('closing');dm&&dm.classList.add('closing');
     setTimeout(()=>{sh&&sh.remove();dm&&dm.remove()},420)}));
+  if(st.fin&&st.bot===110){const hz=document.createElement('button');hz.className='homez';hz.setAttribute('aria-label','Home');s.appendChild(hz);
+    hz.addEventListener('click',e=>{e.stopPropagation();poke();goHome()});}
   if(st.fin){celebrate();return}
   s.querySelectorAll('.bkz').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();poke();if(step>0){step--;renderStep()}else goHome()}));
   const hot=s.querySelector('[data-hot]');
