@@ -611,6 +611,12 @@ html,body{position:fixed;inset:0;width:100%;height:100%;height:100dvh;overflow:h
 
 .scr .rst{position:absolute;border:0;padding:0;background:transparent;cursor:pointer;z-index:3;-webkit-tap-highlight-color:transparent}
 .scr .rst:active{background:rgba(255,255,255,.18)}
+
+/* v29 - scrollable quick links on the app home screen */
+.scr .qls{position:absolute;left:0;width:375px;height:92px;background:0 0/375px 92px no-repeat;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;touch-action:pan-x;overscroll-behavior-x:contain;z-index:2;cursor:grab}
+.scr .qls::-webkit-scrollbar{display:none}
+.scr .qlt{width:max-content;padding:0 10px}
+.scr .qlt img{display:block;width:680px;height:92px;-webkit-user-drag:none;user-select:none;pointer-events:none}
 </style>
 </head>
 <body>
@@ -833,11 +839,11 @@ const success = (title, text, extra='', cta='Done')=>`<div class="app"><div styl
 /* ═════════════ SERVICES & FLOWS ═════════════ */
 const SERVICES = [
  { key:'switch', name:'Business profile', short:'Move between your personal and business profiles in a tap.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'One login for every profile you manage. Switch between personal and business accounts without signing out.', steps:[
-  {img:'switch_0',h:1219,top:0,bot:110,t:'Open profiles',tip:'Tap your name',d:'All your profiles are behind your name.',hot:[66,44,110,34,10]},
+  {img:'switch_0',h:1219,ql:true,top:0,bot:110,t:'Open profiles',tip:'Tap your name',d:'All your profiles are behind your name.',hot:[66,44,110,34,10]},
   {img:'switch_0',h:1219,top:0,bot:110,sheet:'switch_1s',t:'Choose a profile',tip:'Tap Eglise adventiste',d:'Switch between personal and business profiles without signing out.',hot:[32,314,311,64,12]},
-  {img:'switch_2',h:1219,top:0,bot:110,t:'Profile switched',fin:true}]},
+  {img:'switch_2',h:1219,ql:true,top:0,bot:110,t:'Profile switched',fin:true}]},
  { key:'card', name:'Virtual card', short:'A card for safe online shopping, ready in seconds.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Create a prepaid virtual card for online shopping and subscriptions, load it from your account and start paying right away.', steps:[
-  {img:'card_0',h:1219,top:0,bot:110,t:'Open More',tip:'Tap More',d:'Cards, loans and savings are one tap away.',hot:[313,1136,47,52,12]},
+  {img:'card_0',h:1219,ql:true,top:0,bot:110,t:'Open More',tip:'Tap More',d:'Cards, loans and savings are one tap away.',hot:[313,1136,47,52,12]},
   {img:'card_1',h:1219,top:0,bot:324,spot:true,t:'Go to Cards',tip:'Tap Cards',d:'Manage your physical and virtual cards here.',hot:[80,948,60,62,12]},
   {img:'card_2',h:1356,top:71,bot:110,t:'Your cards',tip:'Tap Create virtual card',d:'See balances, lock a card or create a new one.',hot:[14,1143,345,56,8]},
   {img:'card_3',h:799,top:96,bot:0,t:'Choose a card',tip:'Tap Prepaid - USD',d:'Pay in dollars online, without carrying cash.',hot:[20,245,335,124,14]},
@@ -851,7 +857,7 @@ const SERVICES = [
   {img:'card_11',h:911,top:71,bot:0,t:'Card created',tip:'Tap your new card',d:'Your card is being set up. Open it to see it with your other cards.',hot:[30,178,295,156,14]},
   {img:'card_12',h:1423,top:71,bot:110,t:'Your cards',fin:true,cards:['card_12a','card_12b','card_12c'],restart:[14,1143,345,56,10]}]},
  { key:'loan', name:'BK advance', short:'Extra cash when you need it.<br>No paperwork.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:'Opt in to BK Advance and get a credit limit on your current account, approved digitally in minutes.', steps:[
-  {img:'loan_0',h:1219,top:0,bot:110,t:'Open More',tip:'Tap More',d:'Cards, loans and savings are one tap away.',hot:[313,1136,47,52,12]},
+  {img:'loan_0',h:1219,ql:true,top:0,bot:110,t:'Open More',tip:'Tap More',d:'Cards, loans and savings are one tap away.',hot:[313,1136,47,52,12]},
   {img:'loan_1',h:1219,top:0,bot:324,spot:true,t:'Go to Loans',tip:'Tap Loans',d:'All BK loans in one place.',hot:[8,948,60,62,12]},
   {img:'loan_2',h:704,top:96,bot:110,t:'Pick a loan',tip:'Tap BK Advance',d:'Instant credit with no paperwork.',hot:[31,124,311,66,12]},
   {img:'loan_3',h:748,top:96,bot:80,t:'See your limits',tip:'Tap Register to BK Advance',d:'Limits, fees and requirements, shown upfront.',hot:[20,668,335,56,8]},
@@ -860,7 +866,7 @@ const SERVICES = [
   {img:'loan_6',h:1252,top:80,bot:110,t:'Request sent',tip:'Close the message',d:'Your BK Advance request is being processed.',hot:[323,38,36,36,18]},
   {img:'loan_7',h:1252,top:80,bot:110,t:'BK Advance active',fin:true}]},
  { key:'send', name:'BK Quick +', short:'Get an instant loan right in the BK app.', meta:'1 min demo', c:'#2F8BFF', c2:'#3B4DFF', app:'#1d5fe0', lead:"Get an instant loan right in the BK app, with offers from RWF 600,000 up to RWF 30 million.", steps:[
-  {img:'send_0',h:1219,top:0,bot:110,t:'Open More',tip:'Tap More',d:'Loans live under More.',hot:[316,1136,41,52,12]},
+  {img:'send_0',h:1219,ql:true,top:0,bot:110,t:'Open More',tip:'Tap More',d:'Loans live under More.',hot:[316,1136,41,52,12]},
   {img:'send_1',h:682,top:0,bot:110,t:'Start a loan request',tip:'Tap Request a Loan',d:'Check your loan offers or start a new request.',hot:[15,499,345,56,8]},
   {img:'send_2',h:667,top:96,bot:110,t:'Pick BK Quick +',tip:'Tap BK Quick +',d:'An unsecured personal loan, paid straight into your account.',hot:[24,322,330,64,12]},
   {img:'send_3',h:781,top:96,bot:80,t:'See the offer',tip:'Tap Request loan',d:'Interest rate, fees and timing, shown upfront.',hot:[20,701,335,56,8]},
@@ -883,7 +889,7 @@ const SERVICES = [
   {img:'bill_2',h:667,top:96,bot:80,t:'Merchant found',tip:'Tap Continue',d:'BK shows the merchant name before you pay.',hot:[20,587,335,56,8]},
   {img:'bill_3',h:667,top:96,bot:80,t:'Confirm transfer',tip:'Tap Confirm transfer',d:'Check the merchant, account and amount.',hot:[20,587,335,56,8]},
   {img:'bill_4n',h:672,top:0,bot:0,pin:'bill_4p',t:'Enter passcode',tip:'Tap any 4 digits',d:'Your 4-digit passcode authorises every payment. Try any numbers.',hot:[42,209,292,381,26]},
-  {img:'bill_0',h:1219,top:0,bot:110,sheet:'bill_5s',t:'Payment sent',fin:true,ok:[32,563,311,56,10],x:[314,218,34,34,10]}]}
+  {img:'bill_0',h:1219,ql:true,top:0,bot:110,sheet:'bill_5s',t:'Payment sent',fin:true,ok:[32,563,311,56,10],x:[314,218,34,34,10]}]}
 ];
 
 /* ═════════════ STAGE SCALING ═════════════ */
@@ -893,7 +899,7 @@ function vpH(){return (window.visualViewport&&visualViewport.height)||document.d
 function fit(){const s=Math.min(vpW()/1280,vpH()/800);stage.style.transform=`translate(-50%,-50%) scale(${s})`;stage.dataset.s=s;try{measureBD()}catch(_){}}
 addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeout(fit,250));if(window.visualViewport)visualViewport.addEventListener('resize',fit);fit();
 /* never let the page itself scroll, bounce or pinch-zoom */
-document.addEventListener('touchmove',e=>{if(!e.target.closest('.sv,.ccar,.steps'))e.preventDefault()},{passive:false});
+document.addEventListener('touchmove',e=>{if(!e.target.closest('.sv,.ccar,.qls,.steps'))e.preventDefault()},{passive:false});
 document.addEventListener('gesturestart',e=>e.preventDefault());
 document.addEventListener('wheel',e=>{if(!e.target.closest('.sv,.ccar,.steps'))e.preventDefault()},{passive:false});
 addEventListener('scroll',()=>{if(scrollX||scrollY)scrollTo(0,0)});
@@ -1005,6 +1011,7 @@ function screenHTML(st){
       `<button class="czb" data-m="c" style="left:8px;top:168px;width:138px;height:40px"></button><button class="czb" data-m="i" style="left:146px;top:168px;width:138px;height:40px"></button>`+
       [0,1,2,3,4].map(i=>`<button class="czb czs" data-s="${i}" style="left:${20+54*i}px;top:219px;width:44px;height:44px"></button>`).join('')+`</div><div class="simg"`);
   }
+  if(st.ql){html=html.replace('<div class="simg"',`<div class="qls" style="top:${269-CUT}px;background-image:url(${SCR.home_qlbg})"><div class="qlt"><img src="${SCR.home_qlrow}" alt="" draggable="false"></div></div><div class="simg"`);}
   if(st.restart){const r=st.restart;html=html.replace('<div class="simg"',`<button class="rst" aria-label="Start again" style="left:${r[0]}px;top:${r[1]-CUT}px;width:${r[2]}px;height:${r[3]}px;border-radius:${r[4]}px"></button><div class="simg"`);}
   if(st.cards){
     const car=`<div class="ccar" style="top:${170-CUT}px"><div class="ctrack">${st.cards.map(c=>`<img src="${SCR[c]}" alt="" draggable="false">`).join('')}</div></div><div class="cdots" style="top:${347-CUT}px">${st.cards.map((c,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>`;
@@ -1076,6 +1083,9 @@ function renderStep(first){
     hz.addEventListener('click',e=>{e.stopPropagation();poke();goHome()});}
   s.querySelectorAll('.rst').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();poke();step=0;renderStep()}));
   const cz=s.querySelector('.cz'); if(cz) wireCustom(s,cz);
+  s.querySelectorAll('.qls').forEach(q=>{let dx=null,sl=0;q.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;dx=e.clientX;sl=q.scrollLeft;q.setPointerCapture(e.pointerId)});
+    q.addEventListener('pointermove',e=>{if(dx===null)return;q.scrollLeft=sl-(e.clientX-dx)/((+stage.dataset.s||1)*DEV)});
+    const up=()=>{dx=null};q.addEventListener('pointerup',up);q.addEventListener('pointercancel',up);q.addEventListener('click',e=>e.stopPropagation());});
   const cc=s.querySelector('.ccar');
   if(cc){const dots=[...s.querySelectorAll('.cdots i')];
     cc.addEventListener('scroll',()=>{const k=Math.round(cc.scrollLeft/319);dots.forEach((d,i)=>d.classList.toggle('on',i===k))},{passive:true});
