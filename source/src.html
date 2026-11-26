@@ -604,6 +604,9 @@ header{pointer-events:none}header .tback,header .hdr-right,header .hdr-right *{p
 .scr .pktr::before{content:"";position:absolute;left:-12px;right:-12px;top:-14px;bottom:-14px}
 .scr .pkh{background:linear-gradient(90deg,#f00,#ff0 17%,#0f0 33%,#0ff 50%,#00f 67%,#f0f 83%,#f00)}
 .scr .pktr i{position:absolute;top:-4px;width:16px;height:16px;margin-left:-8px;border-radius:50%;box-shadow:0 0 0 3px #fff,0 2px 6px rgba(0,0,0,.25);pointer-events:none}
+
+/* v28 - always fit one screen, no page scroll */
+html,body{position:fixed;inset:0;width:100%;height:100%;height:100dvh;overflow:hidden;overscroll-behavior:none}
 </style>
 </head>
 <body>
@@ -880,8 +883,15 @@ const SERVICES = [
 
 /* ═════════════ STAGE SCALING ═════════════ */
 const stage = document.getElementById('stage');
-function fit(){const s=Math.min(innerWidth/1280,innerHeight/800);stage.style.transform=`translate(-50%,-50%) scale(${s})`;stage.dataset.s=s;try{measureBD()}catch(_){}}
-addEventListener('resize',fit);fit();
+function vpW(){return (window.visualViewport&&visualViewport.width)||document.documentElement.clientWidth||innerWidth}
+function vpH(){return (window.visualViewport&&visualViewport.height)||document.documentElement.clientHeight||innerHeight}
+function fit(){const s=Math.min(vpW()/1280,vpH()/800);stage.style.transform=`translate(-50%,-50%) scale(${s})`;stage.dataset.s=s;try{measureBD()}catch(_){}}
+addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeout(fit,250));if(window.visualViewport)visualViewport.addEventListener('resize',fit);fit();
+/* never let the page itself scroll, bounce or pinch-zoom */
+document.addEventListener('touchmove',e=>{if(!e.target.closest('.sv,.ccar,.steps'))e.preventDefault()},{passive:false});
+document.addEventListener('gesturestart',e=>e.preventDefault());
+document.addEventListener('wheel',e=>{if(!e.target.closest('.sv,.ccar,.steps'))e.preventDefault()},{passive:false});
+addEventListener('scroll',()=>{if(scrollX||scrollY)scrollTo(0,0)});
 
 /* stars */
 (function(){const host=document.getElementById('stars');for(let i=0;i<70;i++){const s=document.createElement('i');s.className='star';s.style.left=Math.random()*100+'vw';s.style.top=Math.random()*42+'vh';s.style.opacity=Math.random();s.style.animationDelay=(-Math.random()*4)+'s';const z=Math.random()<.15?3:Math.random()<.5?2:1;s.style.width=s.style.height=z+'px';host.appendChild(s)}})();
