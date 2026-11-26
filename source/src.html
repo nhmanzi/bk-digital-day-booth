@@ -21,6 +21,18 @@
   animation:brSpin 7s linear infinite;will-change:transform}
 .card:not(.active) .brot{animation-play-state:paused}
 @media (prefers-reduced-motion:reduce){.card .brot{animation:none;transform:rotate(34.5deg) scale(1,var(--bL0,.9))}}
+
+/* v24 - spotlight on the element to tap */
+:root{--spot:.45}
+.scr .spot{position:absolute;left:0;top:0;width:0;height:0;z-index:5;pointer-events:none;opacity:0;
+  box-shadow:0 0 0 2000px rgba(6,12,40,var(--spot)),0 0 18px 6px rgba(6,12,40,calc(var(--spot)*.6));transition:opacity .45s var(--ease)}
+.scr .spot.onsheet{z-index:9}
+.scr .spot.off{display:none}
+.scr .spot.on{opacity:1}
+.scr .spot.pulse{animation:spotPulse .7s var(--ease)}
+@keyframes spotPulse{0%{transform:scale(1)}35%{transform:scale(1.06)}100%{transform:scale(1)}}
+.scr .spotref{position:absolute;pointer-events:none}
+.scr .sheet .hot8{z-index:10}
 </style>
 <style>
 /*__FONTS__*/
@@ -930,6 +942,7 @@ function screenHTML(st){
     const lab=['1','2','3','4','5','6','7','8','9','0'];
     let pk=ks.map(([cx,cy],i)=>`<button class="pk" data-k="${lab[i]}" aria-label="${lab[i]}" style="left:${cx-36}px;top:${cy-36-CUT}px;background-image:url(${SCR[st.pin]});background-size:375px ${h}px;background-position:${-(cx-36)}px ${-(cy-36)}px"></button>`).join('');
     pk+=`<button class="pk del" data-k="del" aria-label="Delete" style="left:266px;top:${548-24-CUT}px"></button>`;
+    pk+=`<i class="spotref" style="left:36px;top:${128-CUT}px;width:303px;height:466px;border-radius:28px"></i>`;
     pk+=[140,172,204,236].map(x=>`<i class="pd" style="left:${x-8}px;top:${152-8-CUT}px"></i>`).join('');
     html=html.replace('</div>'+(where==='scroll'?hot:'')+'</div>', '</div>'+(where==='scroll'?hot:'')+pk+'</div>');
   }
@@ -999,7 +1012,14 @@ function renderStep(first){
   const hot=s.querySelector('[data-hot]');
   if(st.pin){pinCode=[];hot.style.pointerEvents='none';s.querySelectorAll('.pk').forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();pinPress(s,b)}));s.querySelectorAll('.pk').forEach(b=>b.addEventListener('click',e=>e.stopPropagation()));}
   else hot.addEventListener('click',e=>{e.stopPropagation();advance()});
-  s.addEventListener('click',()=>{tip.classList.remove('nudge');void tip.offsetWidth;tip.classList.add('nudge')});
+  const spot=document.createElement('i');spot.className='spot'+(st.sheet?' onsheet':'')+(step===0?'':' off');s.appendChild(spot);
+  const ref=s.querySelector('.spotref')||hot;
+  const placeSpot=()=>{if(!ref.isConnected)return;const sr=s.getBoundingClientRect(),r=ref.getBoundingClientRect(),k=sr.width/375||1;
+    const pad=4;spot.style.left=((r.left-sr.left)/k-pad)+'px';spot.style.top=((r.top-sr.top)/k-pad)+'px';spot.style.width=(r.width/k+pad*2)+'px';spot.style.height=(r.height/k+pad*2)+'px';
+    spot.style.borderRadius=(parseFloat(getComputedStyle(ref).borderTopLeftRadius)||10)+pad+'px'};
+  sv.addEventListener('scroll',placeSpot,{passive:true});
+  requestAnimationFrame(placeSpot);setTimeout(()=>{placeSpot();spot.classList.add('on')},first?1050:650);
+  s.addEventListener('click',()=>{tip.classList.remove('nudge');void tip.offsetWidth;tip.classList.add('nudge');spot.classList.remove('pulse');void spot.offsetWidth;spot.classList.add('pulse')});
   setTimeout(()=>{scrollToHot(s,st);setTimeout(()=>placeTip(hot,st,step),380);},first?700:300);
   if(auto)scheduleAuto();
 }
