@@ -7,7 +7,21 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>BK Digital Day · Experience Booth</title>
-<style>html{background:#010520}</style>
+<style>html{background:#010520}
+/* v22 - performance: baked backdrop blur, compositor border light */
+.card,.card.active{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;will-change:transform}
+.card .bd{position:absolute;left:50%;top:50%;width:2560px;height:1600px;transform-origin:0 0;transform:var(--bt);pointer-events:none;background:0 0/100% 100% no-repeat}
+.card .bd0{background-image:url(__BLUR0__)}
+.card .bd1{background-image:url(__BLUR1__);opacity:var(--p,0)}
+.card::before,.card.active::before{display:none!important;animation:none!important}
+.card .bring{position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;opacity:var(--p,0);overflow:hidden;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.card .brot{position:absolute;left:50%;top:50%;width:var(--bD,420px);height:var(--bD,420px);margin:calc(var(--bD,420px)/-2) 0 0 calc(var(--bD,420px)/-2);
+  background:linear-gradient(180deg,rgba(255,255,255,.1) -0.8%,rgba(255,255,255,.804) 45.2%,rgba(255,255,255,.1) 84.6%);
+  animation:brSpin 7s linear infinite;will-change:transform}
+.card:not(.active) .brot{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.card .brot{animation:none;transform:rotate(34.5deg) scale(1,var(--bL0,.9))}}
+</style>
 <style>
 /*__FONTS__*/
 :root{
@@ -812,7 +826,7 @@ const SERVICES = [
 
 /* ═════════════ STAGE SCALING ═════════════ */
 const stage = document.getElementById('stage');
-function fit(){const s=Math.min(innerWidth/1280,innerHeight/800);stage.style.transform=`translate(-50%,-50%) scale(${s})`;stage.dataset.s=s;}
+function fit(){const s=Math.min(innerWidth/1280,innerHeight/800);stage.style.transform=`translate(-50%,-50%) scale(${s})`;stage.dataset.s=s;try{measureBD()}catch(_){}}
 addEventListener('resize',fit);fit();
 
 /* stars */
@@ -828,12 +842,17 @@ tick();setInterval(tick,20000);
 const N=SERVICES.length, ring=document.getElementById('ring'), dotsEl=document.getElementById('dots');
 const cards=SERVICES.map((s,i)=>{
   const el=document.createElement('div');el.className='card';el.style.setProperty('--c',s.c);el.style.setProperty('--c2',s.c2);el.dataset.i=i;
-  el.innerHTML=`<i class="glass1"></i><i class="glass2"></i><div class="ico"><img src="${ICO[s.key]}" alt=""></div><h3>${s.name}</h3><p>${s.short}</p><div class="foot"><span class="cta"><b>Tap to explore →</b></span></div>`;ring.appendChild(el);const d=document.createElement('span');dotsEl.appendChild(d);return el;
+  el.innerHTML=`<i class="bd bd0"></i><i class="bd bd1"></i><i class="bring"><i class="brot"></i></i><i class="glass1"></i><i class="glass2"></i><div class="ico"><img src="${ICO[s.key]}" alt=""></div><h3>${s.name}</h3><p>${s.short}</p><div class="foot"><span class="cta"><b>Tap to explore →</b></span></div>`;ring.appendChild(el);const d=document.createElement('span');dotsEl.appendChild(d);return el;
 });
 const START=2; let pos=START, target=START, dragging=false, activeIdx=-1, homeLive=true;
 const mod=(a,n)=>((a%n)+n)%n;
 function offset(i){let d=mod(i-pos+N/2,N)-N/2;return d}
+let BDG={rx:0,ry:0,s:1,c:.5,ox:0,oy:0}, lastLayoutPos=NaN, layoutDirty=true;
+function measureBD(){const r=ring.getBoundingClientRect(),vw=innerWidth,vh=innerHeight,c=Math.max(vw/2560,vh/1600);
+  BDG={rx:r.left,ry:r.top,s:+stage.dataset.s||1,c,ox:(vw-2560*c)/2,oy:(vh-1600*c)/2};layoutDirty=true}
+const lastSt=[];
 function layout(){
+  if(!layoutDirty&&pos===lastLayoutPos)return; lastLayoutPos=pos; layoutDirty=false;
   const SC=[1,0.697,0.571,0.5], XS=[0,222,393,520];
   cards.forEach((el,i)=>{
     const d=offset(i), ad=Math.abs(d), k=Math.min(Math.floor(ad),2), f=Math.min(ad,3)-k;
@@ -844,6 +863,8 @@ function layout(){
     el.style.setProperty('--k',(1/Math.sqrt(sc)).toFixed(3));
     const p=Math.max(0,1-ad), e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2, t=Math.max(0,Math.min(1,(p-.55)/.45));
     el.style.setProperty('--p',p.toFixed(3));el.style.setProperty('--e',e.toFixed(3));el.style.setProperty('--t',(t*t*(3-2*t)).toFixed(3));
+    const g=BDG,ss=sc*g.s;
+    el.style.setProperty('--bt',`translate(${((g.ox-g.rx-x*g.s)/ss).toFixed(2)}px,${((g.oy-g.ry)/ss).toFixed(2)}px) scale(${(g.c/ss).toFixed(5)})`);
   });
   const a=mod(Math.round(pos),N);
   if(a!==activeIdx){activeIdx=a;cards.forEach((c,i)=>c.classList.toggle('active',i===a));[...dotsEl.children].forEach((d,i)=>d.classList.toggle('on',i===a));
@@ -854,6 +875,13 @@ function loop(now){ const dt=Math.min(2.5,((now||performance.now())-lastF)/16.66
   if(homeLive){ if(!dragging){ for(let i=0;i<Math.round(dt*2)||0;i++){ vel2+=(target-pos)*0.026; vel2*=0.70; pos+=vel2; }
       if(Math.abs(target-pos)<0.0004&&Math.abs(vel2)<0.0004){pos=target;vel2=0;} } layout(); }
   requestAnimationFrame(loop)}
+function buildSpin(){const a=cards[activeIdx]||cards[0];const w=a.offsetWidth,h=a.offsetHeight,D=Math.ceil(Math.hypot(w,h))+4;
+  let k='';for(let i=0;i<=36;i++){const th=(214.5+i*10)*Math.PI/180,L=Math.abs(w*Math.sin(th))+Math.abs(h*Math.cos(th));
+    k+=`${(i/36*100).toFixed(3)}%{transform:rotate(${(214.5+i*10-180).toFixed(1)}deg) scale(1,${(L/D).toFixed(4)})}`}
+  let st=document.getElementById('brk');if(!st){st=document.createElement('style');st.id='brk';document.head.appendChild(st)}
+  st.textContent=`@keyframes brSpin{${k}}.card{--bD:${D}px}`}
+layout();buildSpin();(document.fonts&&document.fonts.ready||Promise.resolve()).then(()=>{layoutDirty=true;layout();buildSpin()});
+measureBD();addEventListener('resize',()=>setTimeout(measureBD,50));
 loop();
 const go=n=>{target=Math.round(target)+n};
 document.getElementById('prev').onclick=()=>{go(-1);poke()};
@@ -862,14 +890,17 @@ addEventListener('keydown',e=>{poke();if(!homeLive){if(e.key==='Escape')goHome()
 
 const car=document.getElementById('carousel');
 let sx=0,sp=0,lastX=0,lastT=0,vel=0,moved=0,downT=0;
-car.addEventListener('pointerdown',e=>{dragging=true;sx=lastX=e.clientX;sp=pos;lastT=downT=performance.now();vel=0;moved=0;car.setPointerCapture(e.pointerId);poke()});
+let samples=[];
+car.addEventListener('pointerdown',e=>{dragging=true;sx=lastX=e.clientX;sp=pos;vel2=0;lastT=downT=performance.now();vel=0;moved=0;samples=[[downT,e.clientX]];car.setPointerCapture(e.pointerId);poke()},{passive:true});
 car.addEventListener('pointermove',e=>{if(!dragging)return;const s=+stage.dataset.s||1;const dx=(e.clientX-sx)/s;moved=Math.max(moved,Math.abs(dx));
-  pos=sp-dx/222;const t=performance.now();vel=((e.clientX-lastX)/s)/Math.max(1,t-lastT);lastX=e.clientX;lastT=t;});
+  pos=sp-dx/222;const t=performance.now();samples.push([t,e.clientX]);while(samples.length>2&&t-samples[0][0]>90)samples.shift();
+  const a=samples[0];vel=t-a[0]>0?((e.clientX-a[1])/s)/(t-a[0]):0;lastX=e.clientX;lastT=t;},{passive:true});
 car.addEventListener('pointerup',e=>{if(!dragging)return;dragging=false;
   if(moved<8){ // tap
     const el=document.elementsFromPoint(e.clientX,e.clientY).find(n=>n.classList&&n.classList.contains('card'));
     if(el){const i=+el.dataset.i,d=offset(i); if(Math.abs(d)<.5)openFlow(i); else target=Math.round(pos+d);} else target=Math.round(pos);
     return;}
+  if(performance.now()-lastT>90)vel=0;
   let proj=pos-vel*140/222; proj=Math.max(pos-2,Math.min(pos+2,proj)); target=Math.round(proj); vel2=Math.max(-.08,Math.min(.08,-vel*8.3/222));});
 car.addEventListener('pointercancel',()=>{dragging=false;target=Math.round(pos)});
 
