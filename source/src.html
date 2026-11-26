@@ -569,6 +569,13 @@ header{pointer-events:none}header .tback,header .hdr-right,header .hdr-right *{p
 .pd.on{transform:scale(1)}
 .bkz{position:absolute;width:56px;height:46px;border:0;background:transparent;cursor:pointer;z-index:4;border-radius:12px;-webkit-tap-highlight-color:transparent}
 .bkz:active{background:rgba(255,255,255,.18)}
+
+/* v25 - working buttons on the final pop-up */
+.scr .sheet .sbtn{position:absolute;border:0;padding:0;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent;z-index:11}
+.scr .sheet .sbtn:active{background:rgba(255,255,255,.18)}
+.scr .sheet.closing{transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,1,1)}
+.scr .dim.closing{opacity:0;transition:opacity .4s}
+
 </style>
 </head>
 <body>
@@ -840,7 +847,7 @@ const SERVICES = [
   {img:'bill_2',h:667,top:96,bot:80,t:'Merchant found',tip:'Tap Continue',d:'BK shows the merchant name before you pay.',hot:[20,587,335,56,8]},
   {img:'bill_3',h:667,top:96,bot:80,t:'Confirm transfer',tip:'Tap Confirm transfer',d:'Check the merchant, account and amount.',hot:[20,587,335,56,8]},
   {img:'bill_4n',h:672,top:0,bot:0,pin:'bill_4p',t:'Enter passcode',tip:'Tap any 4 digits',d:'Your 4-digit passcode authorises every payment. Try any numbers.',hot:[42,209,292,381,26]},
-  {img:'bill_0',h:1219,top:0,bot:110,sheet:'bill_5s',t:'Payment sent',fin:true}]}
+  {img:'bill_0',h:1219,top:0,bot:110,sheet:'bill_5s',t:'Payment sent',fin:true,ok:[32,563,311,56,10],x:[314,218,34,34,10]}]}
 ];
 
 /* ═════════════ STAGE SCALING ═════════════ */
@@ -953,7 +960,8 @@ function screenHTML(st){
   if(st.sheet){
     let sh='';
     if(st.hot){const [x,y,w,hh,r]=st.hot; sh=`<div class="hot8" data-hot style="left:${x}px;top:${y}px;width:${w}px;height:${hh}px;border-radius:${r}px"></div>`;}
-    html+=`<div class="sheet" style="background-image:url(${SCR[st.sheet]})">${sh}</div>`;
+    const btn=(k,r)=>r?`<button class="sbtn" data-a="${k}" aria-label="${k==='ok'?'OK':'Close'}" style="left:${r[0]}px;top:${r[1]}px;width:${r[2]}px;height:${r[3]}px;border-radius:${r[4]}px"></button>`:'';
+    html+=`<div class="sheet" style="background-image:url(${SCR[st.sheet]})">${sh}${btn('ok',st.ok)}${btn('x',st.x)}</div>`;
   }
   return `<div class="content">${html}</div><div class="sbg" style="background:linear-gradient(90deg,${c[0]},${c[1]})"></div>`+(st.sheet?'<div class="dim"></div>':'');
 }
@@ -1007,6 +1015,10 @@ function renderStep(first){
   document.getElementById('fProg').style.width=(step/(total-1)*100)+'%';
   actionsFor(!!st.fin);
   tip.classList.remove('on');line.classList.remove('on');finger.classList.remove('on');
+  s.querySelectorAll('.sbtn').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();poke();
+    if(b.dataset.a==='ok'){step=0;renderStep();return}
+    const sh=s.querySelector('.sheet'),dm=s.querySelector('.dim');sh&&sh.classList.add('closing');dm&&dm.classList.add('closing');
+    setTimeout(()=>{sh&&sh.remove();dm&&dm.remove()},420)}));
   if(st.fin){celebrate();return}
   s.querySelectorAll('.bkz').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();poke();if(step>0){step--;renderStep()}else goHome()}));
   const hot=s.querySelector('[data-hot]');
